@@ -16,7 +16,7 @@ for (i=1:S(1))
 %Use values from fir of the average of all points
         %Dm=mean(D)
         %A=fit(t',D,'a*(1+b*exp(-c*x)+d*exp(-e*x))','StartPoint',[Dm,0.0556,0.007,0.1629,0.0005],'Lower',[Dm/4,0.01,0.001,0.01,0],'Upper',[Dm*2,0.6,0.05,0.6,0.002]);
-        B=smooth(D,7/Fr);
+        B=smooth(D,14/Fr);
 
         Unbleached_data(i,j,k,:)=D-B;
 %         if(j==25)

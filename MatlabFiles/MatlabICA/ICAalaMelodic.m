@@ -35,7 +35,7 @@ R=R1;
 
 %% Variance normalisation ala melodic
 [uu,ss,vv]=nets_svds(R,60); % initial SVD to the top 30 components (arbitrary number fixed in MELODIC)
-vv(abs(vv)<0.4*std(vv(:)))=0;
+vv(abs(vv)<2.3*std(vv(:)))=0;
 %vv(abs(vv)<2.3*std(vv(:)))=0;
 stddevs=max(std(R-uu*ss*vv'),1);  % subtract main parts of top components from data to get normalisation
 R=R./repmat(stddevs,size(R,1),1);  % var-norm
@@ -87,9 +87,9 @@ end
 
 % Save ICA maps and time series
 out.vol = Dica;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'150Smith0_4IC.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'150Smith23IC.nii'));
 
-save(strcat(file(1:size(file,2)-4),'150Smith0_4TS'),'TSo')
+save(strcat(file(1:size(file,2)-4),'150Smith23TS'),'TSo')
 
 % Next step is opening the maps and time series in an ipython notebook for
 % manual sorting

@@ -1,0 +1,4 @@
+sudo writevt /dev/pts/22 'ssh saimon@nexcave.ucsd.edu
+ssh saimon@67.58.51.26
+for i in {1867..2178}; do printf -v j "%05d" $i; python2.7 /home/saimon/stanford_lfanalyze_v0.4/lfdeconvolve.py /home/saimon/data/Data100157/Data100157_$i.tif -c /home/saimon/data/100157_ss1_f1250_6microns.lfc -o /home/saimon/data/100157ss1/100157ss1-$j.tif --max-iter=15; done;
+'
