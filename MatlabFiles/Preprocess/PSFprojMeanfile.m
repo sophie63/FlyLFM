@@ -1,6 +1,6 @@
 %parameters to fill up
 dz=6;
-z1=16;
+z1=18;
 
 
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
