@@ -15,11 +15,11 @@ clear
 %%fill up parameters here
 
 %frame rate
-Fr=0.0025;
+Fr=0.01;
 %sign of relation from deltaF/F to underlying change
-Sdff=-1;
+Sdff=1;
 %position of the focal plane in the stack
-z1=17;
+z1=18;
 %distance between z stacks
 dz=6;
 
@@ -38,12 +38,12 @@ Data=D.vol;
 S=size(Data);
 clear D
 
-%first detrend over 7sec 
+% First detrend over 10 sec 
 Unbleached_data = Sdff*Detrend(Data,Fr);
 clear Data
 
 out.vol=Unbleached_data(:,:,:,2:(S(4)-1));
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7s.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10s.nii'));
 
 clear out
 
@@ -54,9 +54,9 @@ parfor i=1:S(4)
     DM(:,:,:,i)=M2.*Unbleached_data(:,:,:,i);
 end
 clear Unbleached_data
-
+% 
 out.vol=DM;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7sM.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sM.nii'));
 clear out
 
 Dtemp=DM(:,:,:,1);
@@ -95,7 +95,7 @@ end
 clear DM
 
 out.vol=Dpsf2;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7sMpsf.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsf.nii'));
 clear out
 
 out2.vol=Dtemppsf;
@@ -114,7 +114,7 @@ end
 clear Dpsf2
 
 out.vol=Dkf(:,:,:,2:S(4)-1);
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7sMpsfkf.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsfkf.nii'));
 
 
 
