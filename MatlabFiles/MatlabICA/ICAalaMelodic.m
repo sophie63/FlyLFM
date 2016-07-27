@@ -33,11 +33,6 @@ R=R1;
 %   stddevs=max(std(R),0.01);  
 %   R=R./repmat(stddevs,size(R,1),1);  % var-norm
 
-% Check dimentionality
-%[uu,ss,vv]=nets_svds(R,500); 
-%plot(log(diag(ss)))
-% pause
-
 %% Variance normalisation ala melodic
 [uu,ss,vv]=nets_svds(R,60); 
 % initial SVD to the top components
@@ -50,10 +45,13 @@ stddevs=max(std(R-uu*ss*vv'),1);
 % Note also that small values are not increased (normalized by one)
 R=R./repmat(stddevs,size(R,1),1);  % Var-norm
 
-
+% Check dimentionality
+%[uu,ss,vv]=nets_svds(R,3000); 
+%plot(log(diag(ss)))
+% pause
 %% SVD
 % Use twice the inflexion point 
-Npc=70;
+Npc=200;
 [u,s,v]=nets_svds(R,Npc);
 
 % Save PCA maps
@@ -69,7 +67,7 @@ save(strcat(file(1:size(file,2)-4),'PCATS'),'u')
 %pause
 % Check the PCs then, identify the components that look like movement and
 % noise and remove them before ICA
-goodPC=[1:60];
+goodPC=[1:150];
 Npc=size(goodPC,2);
 newv=v(:,goodPC);
 
