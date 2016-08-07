@@ -4,7 +4,7 @@ clear all
 file=strcat(PathName,FileName)
 M=MRIread(file);
 Mask=M.vol;
-M2=Mask./(max(max(max(Mask))));
+%M2=Mask./(max(max(max(Mask))));
 %Mask=1-Mask;%use that line if mask from segmentation editor
 %Md=double(M);
 

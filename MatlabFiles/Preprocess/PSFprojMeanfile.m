@@ -1,6 +1,12 @@
 %parameters to fill up
 dz=6;
+<<<<<<< HEAD
 z1=17;
+||||||| merged common ancestors
+z1=16;
+=======
+z1=18;
+>>>>>>> 391ef8394753bc7dd73a58e5f42c106fc9574953
 
 
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
