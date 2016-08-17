@@ -1,8 +1,6 @@
 %% This script does all the preprocessing steps from the 4D light reconstructed data set, to a dataset ready to be analysed using PCA and ICA
 % The steps are: 
-% * Detrending the data with the signal boxed averaged over 7 s. This allows to center the data and to remove decrease in fluorescence from fluorophore bleaching
-% * Masking the data using a thresholded version of an image (prepared in
-% imageJ)
+% * Detrending the data with the signal boxed averaged over 10 s. This allows to center the data and to remove decrease in fluorescence from fluorophore bleaching
 % * Projecting the images along the psf depth to decrease dimentionality a
 %  and concentrate the information
 % * Denoising using a Kalman Filter 
@@ -12,23 +10,23 @@
 
 clear
 
-%%fill up parameters here
+%% Fill up parameters here
 
 %frame rate
-Fr=0.01;
+Fr=0.005;
 %sign of relation from deltaF/F to underlying change
-Sdff=1;
+Sdff=-1;
 %position of the focal plane in the stack
-z1=32;
+z1=34;
 %distance between z stacks
 dz=3;
 
-%open mask
-[FileName,PathName] = uigetfile('*.nii','Select the mask file','/home/sophie/Desktop/');
-file2=strcat(PathName,FileName)
-M=MRIread(file2);
-Mask=M.vol;
-M2=Mask./(max(max(max(Mask))));
+%% Open mask
+% [FileName,PathName] = uigetfile('*.nii','Select the mask file','/home/sophie/Desktop/');
+% file2=strcat(PathName,FileName)
+% M=MRIread(file2);
+% Mask=M.vol;
+% M2=Mask./(max(max(max(Mask))));
 
 %choose the reconstructed 4D nifti file
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti 4D dataset','/home/sophie/Desktop/');
@@ -38,27 +36,19 @@ Data=D.vol;
 S=size(Data);
 clear D
 
-% First detrend over 10 sec 
-Unbleached_data = Sdff*Detrend(Data,Fr);
+%first detrend over 7sec 
+Unbleached_data = Sdff*DetrendMed(Data,Fr);
 clear Data
 
 out.vol=Unbleached_data(:,:,:,2:(S(4)-1));
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10s.nii'));
+file2=strcat(file(1:size(file,2)-4),'Umed10s.nii');
+err = MRIwrite(out,file2);
 
 clear out
 
 %%Mask the detrended data
 S=size(Unbleached_data);
-
-parfor i=1:S(4)
-    DM(:,:,:,i)=M2.*Unbleached_data(:,:,:,i);
-end
-clear Unbleached_data
-% 
-out.vol=DM;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sM.nii'));
-clear out
-
+DM=Unbleached_data;
 Dtemp=DM(:,:,:,1);
 
 for i=1:S(4)
@@ -95,11 +85,11 @@ end
 clear DM
 
 out.vol=Dpsf2;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsf.nii'));
+err = MRIwrite(out,strcat(file2(1:size(file2,2)-4),'psf.nii'));
 clear out
 
 out2.vol=Dtemppsf;
-err = MRIwrite(out2,strcat(file(1:size(file,2)-4),'temp.nii'));
+err = MRIwrite(out2,strcat(file2(1:size(file2,2)-4),'temp.nii'));
 clear out2
 
 S=size(Dpsf2);
@@ -114,7 +104,7 @@ end
 clear Dpsf2
 
 out.vol=Dkf(:,:,:,2:S(4)-1);
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsfkf.nii'));
+err = MRIwrite(out,strcat(file2(1:size(file2,2)-4),'psfkf.nii'));
 
 
 

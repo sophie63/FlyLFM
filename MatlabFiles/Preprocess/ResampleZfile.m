@@ -15,6 +15,7 @@ parfor i=1:S(4)
     Dres(k,j,:,i)=resample(Data(k,j,:,i),2,1);
 end
 end
+k
 end
 
 out.vol=Dres;

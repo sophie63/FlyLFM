@@ -1,3 +1,4 @@
+clear all
 %parameters to fill up
 dz=3;
 z1=32;
@@ -9,7 +10,7 @@ D=MRIread(file);
 Data=D.vol;
 S=size(Data);
 
-for i=1:S(4)
+
 Z0=1:size(Data,3);
 Zinit=((Z0-z1)*dz+dz/2);
 z_psf=abs(Zinit)*0.239+5.46;
@@ -20,20 +21,18 @@ k=1;
 while k<=(size(Data,3))
     if (z_psf(k)>dz)
         nz=int8(z_psf(k)/(dz));
-        Dpsf2(:,:,j,i)=mean(Data(:,:,k:min((k+nz),size(Data,3)),i),3);
+        Dpsf2(:,:,j)=mean(Data(:,:,k:min((k+nz),size(Data,3))),3);
         Znew(j)=Zinit(k)+z_psf(k)/(2*dz);
         j=j+1;
         k=k+nz+1;
     else
-        Dpsf2(:,:,j,i)=Data(:,:,k,i);
+        Dpsf2(:,:,j)=Data(:,:,k);
         Znew(j)=Zinit(k);
         j=j+1;
         k=k+1;
     end
 end
 
-i
-end
 
 out.vol=Dpsf2;
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'psf.nii'));

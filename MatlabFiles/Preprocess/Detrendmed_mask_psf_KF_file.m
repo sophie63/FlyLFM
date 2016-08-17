@@ -15,13 +15,13 @@ clear
 %%fill up parameters here
 
 %frame rate
-Fr=0.01;
+Fr=0.005;
 %sign of relation from deltaF/F to underlying change
-Sdff=1;
+Sdff=-1;
 %position of the focal plane in the stack
-z1=32;
+z1=18;
 %distance between z stacks
-dz=3;
+dz=6;
 
 %open mask
 [FileName,PathName] = uigetfile('*.nii','Select the mask file','/home/sophie/Desktop/');
@@ -39,11 +39,11 @@ S=size(Data);
 clear D
 
 % First detrend over 10 sec 
-Unbleached_data = Sdff*Detrend(Data,Fr);
+Unbleached_data = Sdff*DetrendMed(Data,Fr);
 clear Data
 
 out.vol=Unbleached_data(:,:,:,2:(S(4)-1));
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10s.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'Umed10s.nii'));
 
 clear out
 
@@ -56,7 +56,7 @@ end
 clear Unbleached_data
 % 
 out.vol=DM;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sM.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'Umed10sM.nii'));
 clear out
 
 Dtemp=DM(:,:,:,1);
@@ -95,7 +95,7 @@ end
 clear DM
 
 out.vol=Dpsf2;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsf.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'Umed10sMpsf.nii'));
 clear out
 
 out2.vol=Dtemppsf;
@@ -114,7 +114,7 @@ end
 clear Dpsf2
 
 out.vol=Dkf(:,:,:,2:S(4)-1);
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsfkf.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U1med0sMpsfkf.nii'));
 
 
 

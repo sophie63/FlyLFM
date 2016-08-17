@@ -17,7 +17,7 @@ Fr=0.005;
 %sign of relation from deltaF/F to underlying change
 Sdff=-1;
 %position of the focal plane in the stack
-z1=34;
+z1=36;
 %distance between z stacks
 dz=3;
 
@@ -36,7 +36,7 @@ Data=D.vol;
 S=size(Data);
 clear D
 
-%first detrend over 7sec 
+%first detrend over 10sec 
 Unbleached_data = Sdff*Detrend(Data,Fr);
 clear Data
 

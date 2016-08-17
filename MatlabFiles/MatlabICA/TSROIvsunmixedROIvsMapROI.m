@@ -5,8 +5,8 @@ end
 
 GMz=GM;
 GMz(GM1vn<2.5)=0;
-GMzbin=GMz;
-GMzbin(GMz~=0)=1;
+%GMzbin=GMz;
+%GMzbin(GMz~=0)=1;
 
 % % Averaging in z scored binarized map
 % for j=1:Npc
@@ -34,7 +34,7 @@ TSzmap=sum(Rmap,2);
 
 % Weighted average by zscored map and unmixed
 for j=1:Npc
-TSzum(:,j)=Rmap(:,:,j)*pinv(icasig(j,:));
+TSzum(:,j)=Rmap(:,:,j)*pinv(GMz(j,:));
 end
 
 
@@ -42,6 +42,6 @@ n=30
 figure 
 plot(TS(:,n)/sqrt(var(TS(:,n))),'b')
 hold on
-%plot(TSroi(:,1,n)/sqrt(var(TSroi(:,1,n))),'r')
+plot(TSzmap(:,1,n)/sqrt(var(TSroi(:,1,n))),'r')
 %plot(TSmum(:,n)/sqrt(var(TSmum(:,n))),'g')
 plot(TSzum(:,n)/sqrt(var(TSzum(:,n))),'m')

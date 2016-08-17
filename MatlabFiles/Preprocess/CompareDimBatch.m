@@ -58,5 +58,11 @@ file=strcat(InputDir,'/',files(k).name)
 file2=strcat(file(1:size(file,2)-4),'Dim.mat')
 var=diag(ss);
 save(file2,'var')
-
+clear D
+clear S1
+clear R
+clear R1
+clear uu
+clear ss
+clear vv
 end

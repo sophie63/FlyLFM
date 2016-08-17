@@ -29,7 +29,7 @@ R1=R.*(10000/P);
 clear R
 R=R1;
 
-% % %simple std norm (choose between this and Smith lines below)
+%% Simple std norm (choose between this and Smith lines below)
 %   stddevs=max(std(R),0.01);  
 %   R=R./repmat(stddevs,size(R,1),1);  % var-norm
 
@@ -46,12 +46,13 @@ stddevs=max(std(R-uu*ss*vv'),1);
 R=R./repmat(stddevs,size(R,1),1);  % Var-norm
 
 % Check dimentionality
-%[uu,ss,vv]=nets_svds(R,3000); 
-%plot(log(diag(ss)))
+[uu,ss,vv]=nets_svds(R,1000); 
+plot(log(diag(ss)))
 % pause
+
 %% SVD
 % Use twice the inflexion point 
-Npc=200;
+Npc=350;
 [u,s,v]=nets_svds(R,Npc);
 
 % Save PCA maps
@@ -67,7 +68,7 @@ save(strcat(file(1:size(file,2)-4),'PCATS'),'u')
 %pause
 % Check the PCs then, identify the components that look like movement and
 % noise and remove them before ICA
-goodPC=[1:150];
+goodPC=[1:300];
 Npc=size(goodPC,2);
 newv=v(:,goodPC);
 
@@ -104,9 +105,9 @@ end
 
 % Save ICA maps and time series
 out.vol = Dica;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4IC.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_60IC.nii'));
 
-save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4TS'),'TSo')
+save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_60TS'),'TSo')
 
 % Next step is opening the maps and time series in an ipython notebook for
 % manual sorting
