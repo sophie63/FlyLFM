@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 clear all
 
 % open Data
@@ -44,4 +43,3 @@ end
 
 out.vol=Dres;
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'zx2.nii'));
->>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631

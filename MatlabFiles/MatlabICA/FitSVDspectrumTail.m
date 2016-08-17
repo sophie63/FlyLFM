@@ -1,14 +1,4 @@
-
-
-function f=SVDTail(sig,L)
-q=Ndim*Tdim;
-LM=sig*sig*(1+sqrt(1/q))^2;
-Lm=sig*sig*(1-sqrt(1/q))^2;
-f=(q/(2*pi*sig*sig))*sqrt((LM-L)*(L-Lm))/L;
-end
-
 sig0 = 1;
-Fsumsquares = @(x)sum((SVDTail(sig,L) - y).^2);
+Fsumsquares = @(sig)sum((SVDTail(sig,500:1000,S1(1)*S1(2)*S1(3),S1(4)) - diag(ss(500:1000,500:1000))').^2);
 opts = optimoptions('fminunc','Algorithm','quasi-newton');
-[xunc,ressquared,eflag,outputu] = ...
-    fminunc(Fsumsquares,sig0,opts)
+[sigunc,ressquared,eflag,outputu] = fminunc(Fsumsquares,sig0,opts);

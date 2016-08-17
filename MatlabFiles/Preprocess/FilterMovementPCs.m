@@ -45,3 +45,17 @@ Dnew(:,:,:,i)=reshape(Rnew(i,:),[S1(1),S1(2),S1(3)]);
 end
 out4.vol = Dnew;
 err = MRIwrite(out4,strcat(file(1:size(file,2)-4),'PCAF.nii'));
+
+
+% Rnewtest=R-u*s*v';
+% 
+% % Save filtered data
+% parfor i=1:S1(4)
+% Dnewtest(:,:,:,i)=reshape(Rnewtest(i,:),[S1(1),S1(2),S1(3)]);
+% end
+% out4.vol = Dnewtest;
+% err = MRIwrite(out4,strcat(file(1:size(file,2)-4),'PCAFtest.nii'));
+
+
+
+

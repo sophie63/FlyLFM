@@ -34,7 +34,8 @@ R=R1;
 %   R=R./repmat(stddevs,size(R,1),1);  % var-norm
 
 %% Variance normalisation ala melodic
-[uu,ss,vv]=nets_svds(R,60); 
+NPCfilt=60;
+[uu,ss,vv]=nets_svds(R,NPCfilt); 
 % initial SVD to the top components
 vv(abs(vv)<0.4*std(vv(:)))=0;
 %vv(abs(vv)<2.3*std(vv(:)))=0;
@@ -52,7 +53,7 @@ plot(log(diag(ss)))
 
 %% SVD
 % Use twice the inflexion point 
-Npc=350;
+Npc=150;
 [u,s,v]=nets_svds(R,Npc);
 
 % Save PCA maps
@@ -68,7 +69,8 @@ save(strcat(file(1:size(file,2)-4),'PCATS'),'u')
 %pause
 % Check the PCs then, identify the components that look like movement and
 % noise and remove them before ICA
-goodPC=[1:300];
+Id=[1,3,5];
+goodPC=[2,4,6:150];
 Npc=size(goodPC,2);
 newv=v(:,goodPC);
 
@@ -105,10 +107,35 @@ end
 
 % Save ICA maps and time series
 out.vol = Dica;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_60IC.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'IC.nii'));
 
-save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_60TS'),'TSo')
+save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'TS'),'TSo')
 
 % Next step is opening the maps and time series in an ipython notebook for
 % manual sorting
+% Zscore maps
+for i=1:Npc
+    GM1vn(:,i)=GM(:,i)/(sqrt(var(GM(:,i))));
+end
 
+GMz=GM;
+GMz(GM1vn<2.5)=0;
+
+% Remove bad PCs
+Rnew=R-u(:,Id)*s(Id,Id)*v(:,Id)';
+for j=1:Npc
+parfor i=1:S1(4)
+TSzmap(i,j)=mean(Rnew(i,:).*GMz(:,j)');
+end
+j
+end
+
+TSzmapo=TSzmap(:,Order(Npc:-1:1));
+save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'TSzmap'),'TSzmapo')
+
+figure
+hold on
+for i=1:Npc
+    plot(TSo(:,i)/sqrt(var(TSo(:,i)))+i*10,'r')
+    plot(TSzmapo(:,i)/sqrt(var(TSzmapo(:,i)))+i*10+5,'b')
+end
