@@ -70,14 +70,15 @@ save(strcat(file(1:size(file,2)-4),'PCATS'),'u')
 % Check the PCs then, identify the components that look like movement and
 % noise and remove them before ICA
 prompt = 'What are the components that correspond to movement? ';
-Id1 = input(prompt)%goodPC=[2,4,6:150];%goodPC=[2,4,6:150];
+Id1 = input(prompt)
 Id2 = input(prompt)
 Id3 = input(prompt)
 Id=[Id1,Id2,Id3]
 
-goodPC1=[1:Npc];
-goodPC1(Id)=nan;
-goodPC=goodPC1(~isnan(goodPC1));
+%goodPC=[2,4,6:150];
+goodPC=[1:Npc];
+goodPC(Id)=nan;
+
 Npc=size(goodPC,2);
 newv=v(:,goodPC);
 
