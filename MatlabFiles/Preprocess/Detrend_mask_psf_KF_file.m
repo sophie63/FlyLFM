@@ -15,11 +15,23 @@ clear
 %%fill up parameters here
 
 %frame rate
+<<<<<<< HEAD
 Fr=0.02;
+||||||| merged common ancestors
+Fr=0.0025;
+=======
+Fr=0.01;
+>>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
 %sign of relation from deltaF/F to underlying change
 Sdff=1;
 %position of the focal plane in the stack
+<<<<<<< HEAD
 z1=38;
+||||||| merged common ancestors
+z1=17;
+=======
+z1=32;
+>>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
 %distance between z stacks
 dz=3;
 
@@ -38,12 +50,26 @@ Data=D.vol;
 S=size(Data);
 clear D
 
+<<<<<<< HEAD
 % First detrend over 10 sec 
 Unbleached_data = Sdff*DetrendMed(Data,Fr);
+||||||| merged common ancestors
+%first detrend over 7sec 
+Unbleached_data = Sdff*Detrend(Data,Fr);
+=======
+% First detrend over 10 sec 
+Unbleached_data = Sdff*Detrend(Data,Fr);
+>>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
 clear Data
 
 out.vol=Unbleached_data(:,:,:,2:(S(4)-1));
+<<<<<<< HEAD
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'Umed10s.nii'));
+||||||| merged common ancestors
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7s.nii'));
+=======
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10s.nii'));
+>>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
 
 clear out
 
@@ -56,7 +82,13 @@ end
 clear Unbleached_data
 % 
 out.vol=DM;
+<<<<<<< HEAD
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'Umed10sM.nii'));
+||||||| merged common ancestors
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7sM.nii'));
+=======
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sM.nii'));
+>>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
 clear out
 
 Dtemp=DM(:,:,:,1);
@@ -95,7 +127,13 @@ end
 clear DM
 
 out.vol=Dpsf2;
+<<<<<<< HEAD
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'Umed10sMpsf.nii'));
+||||||| merged common ancestors
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7sMpsf.nii'));
+=======
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsf.nii'));
+>>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
 clear out
 
 out2.vol=Dtemppsf;
@@ -114,7 +152,13 @@ end
 clear Dpsf2
 
 out.vol=Dkf(:,:,:,2:S(4)-1);
+<<<<<<< HEAD
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U1med0sMpsfkf.nii'));
+||||||| merged common ancestors
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U7sMpsfkf.nii'));
+=======
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsfkf.nii'));
+>>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
 
 
 
