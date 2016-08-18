@@ -102,7 +102,7 @@ out.vol=Dpsf2;
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'U10sMpsf.nii'));
 clear out
 
-out2.vol=Dtemppsf;
+out2.vol=Dtemppsf;%   Detailed explanation goes here
 err = MRIwrite(out2,strcat(file(1:size(file,2)-4),'temp.nii'));
 clear out2
 
