@@ -15,7 +15,7 @@ parfor i=1:S1(4)
 R(i,:)=reshape(D(:,:,:,i),[1,S1(1)*S1(2)*S1(3)]);
 end
 clear D
-
+R0=R;
 
 % Demean
 S2=size(R);
@@ -49,11 +49,13 @@ R=R./repmat(stddevs,size(R,1),1);  % Var-norm
 % Check dimentionality
 [uu,ss,vv]=nets_svds(R,1000); 
 plot(log(diag(ss)))
-% pause
+% Typically draw a line using the tail and choose Npc at the point the
+% curve deviates from this (should be higher than the inflexion point)
+prompt = 'How many components do you want?';
+Npc = input(prompt)
 
 %% SVD
-% Use twice the inflexion point 
-Npc=150;
+
 [u,s,v]=nets_svds(R,Npc);
 
 % Save PCA maps
@@ -69,11 +71,15 @@ save(strcat(file(1:size(file,2)-4),'PCATS'),'u')
 %pause
 % Check the PCs then, identify the components that look like movement and
 % noise and remove them before ICA
-prompt = 'What are the components that correspond to movement? ';
-Id1 = input(prompt)%goodPC=[2,4,6:150];%goodPC=[2,4,6:150];
+prompt = 'What components correspond to movement? ';
+Id1 = input(prompt)
 Id2 = input(prompt)
 Id3 = input(prompt)
-Id=[Id1,Id2,Id3]
+Id4 = input(prompt)
+Id5 = input(prompt)
+Id6 = input(prompt)
+Id7 = input(prompt)
+Id=[Id1,Id2,Id3,Id4,Id5,Id6,Id7]
 
 goodPC1=[1:Npc];
 goodPC1(Id)=nan;
@@ -129,10 +135,10 @@ GMz=GM;
 GMz(GM1vn<2.5)=0;
 
 % Remove bad PCs
-Rnew=R-u(:,Id)*s(Id,Id)*v(:,Id)';
+
 for j=1:Npc
 parfor i=1:S1(4)
-TSzmap(i,j)=mean(Rnew(i,:).*GMz(:,j)');
+TSzmap(i,j)=mean(R0(i,:).*GMz(:,j)');
 end
 j
 end
