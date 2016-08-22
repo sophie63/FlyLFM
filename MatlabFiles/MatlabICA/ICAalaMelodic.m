@@ -1,6 +1,7 @@
 % This script performs PCA and spatial ICA in a manner similar to melodic from FSL 
 
 clear all
+close all
 
 % Open Data
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file');
@@ -55,7 +56,6 @@ prompt = 'How many components do you want?';
 Npc = input(prompt)
 
 %% SVD
-
 [u,s,v]=nets_svds(R,Npc);
 
 % Save PCA maps
@@ -124,21 +124,17 @@ err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2st
 
 save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'TS'),'TSo')
 
-% Next step is opening the maps and time series in an ipython notebook for
-% manual sorting
-% Zscore maps
+% Use thresholded maps as region of interest
 for i=1:Npc
     GM1vn(:,i)=GM(:,i)/(sqrt(var(GM(:,i))));
 end
 
-GMz=GM;
-GMz(GM1vn<2.5)=0;
-
-% Remove bad PCs
+GM1vn=GM1vn-2.5;
+GM1vn(GM1vn<0)=0;
 
 for j=1:Npc
 parfor i=1:S1(4)
-TSzmap(i,j)=mean(R0(i,:).*GMz(:,j)');
+TSzmap(i,j)=mean(R0(i,:).*GM1vn(:,j)');
 end
 j
 end
@@ -152,3 +148,6 @@ for i=1:Npc
     plot(TSo(:,i)/sqrt(var(TSo(:,i)))+i*10,'r')
     plot(TSzmapo(:,i)/sqrt(var(TSzmapo(:,i)))+i*10+5,'b')
 end
+
+% Next step is opening the maps and time series in an ipython notebook for
+% manual sorting
