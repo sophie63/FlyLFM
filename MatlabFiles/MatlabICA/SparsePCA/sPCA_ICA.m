@@ -1,4 +1,3 @@
-% This script performs PCA and spatial ICA in a manner similar to melodic from FSL 
 
 clear all
 
