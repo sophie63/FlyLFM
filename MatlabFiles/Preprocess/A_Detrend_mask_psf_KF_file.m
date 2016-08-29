@@ -10,7 +10,7 @@
 % is available on disk
 
 
-clear
+clear all
 
 prompt = 'What is the frame rate?';
 Fr = input(prompt)
@@ -93,8 +93,6 @@ while k<=(size(DM,3))
         k=k+1;
     end
 end
-
-i
 end
 clear DM
 
@@ -113,7 +111,6 @@ parfor i=1:S(3)
 C=squeeze(Dpsf2(:,:,i,:));
 k50=Kalman_Stack_Filter(C);
 Dkf(:,:,i,:)=k50;
-i
 end
 clear Dpsf2
 

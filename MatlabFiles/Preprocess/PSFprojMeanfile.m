@@ -1,14 +1,7 @@
 %parameters to fill up
-
-dz=3;
-z1=32;
-<<<<<<< HEAD
-||||||| merged common ancestors
->>>>>>> 57759d29a73933bc92c6aaedf808d46b8fabe631
-
-=======
-
->>>>>>> 3178b48440d9454c8397ec1a57a219b60a0c9e7c
+clear all
+dz=6;
+z1=8;
 
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)

@@ -83,7 +83,6 @@ while k<=(size(DM,3))
     end
 end
 
-i
 end
 clear DM
 

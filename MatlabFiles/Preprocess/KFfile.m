@@ -1,4 +1,4 @@
-clear
+clear all
 
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)

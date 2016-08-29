@@ -35,13 +35,13 @@ R=R1;
 %   R=R./repmat(stddevs,size(R,1),1);  % var-norm
 
 %% Variance normalisation ala melodic
-NPCfilt=60;
+NPCfilt=30;
 [uu,ss,vv]=nets_svds(R,NPCfilt); 
 % initial SVD to the top components
-vv(abs(vv)<0.4*std(vv(:)))=0;
+%vv(abs(vv)<0.4*std(vv(:)))=0;
 %vv(abs(vv)<2.3*std(vv(:)))=0;
 %vv(abs(vv)<0.023*std(vv(:)))=0;
-stddevs=max(std(R-uu*ss*vv'),1);  
+stddevs=max(std(R-uu*ss*vv'),0.01);  
 % Subtract main parts of top components from data to get normalisation
 % Which leaves most main components not normalized
 % Note also that small values are not increased (normalized by one)

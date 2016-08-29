@@ -2,8 +2,8 @@
 % brain regions due to low resolution
 
 %parameters to fill up
-dz=3;
-z1=32;
+dz=6;
+z1=8;
 
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)
