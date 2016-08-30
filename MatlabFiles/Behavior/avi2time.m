@@ -1,4 +1,7 @@
-function Time = avi2time (name)
+function Time = avi2time
+
+[FileName,PathName] = uigetfile('*.avi','Select the AVI file');
+name=strcat(PathName,FileName)
 
 mov=VideoReader(name);
 B = read(mov,[1 Inf]);
@@ -26,7 +29,7 @@ for i=1:S(4)
 secnum(i)=bit2num(sec(i,:));
 end
 
-Time=secnum+cycnum*0.000125;
+T=secnum+cycnum*0.000125;
 
 j=0;
 
@@ -35,8 +38,7 @@ T2(1)=T(1);
 for i=1:(size(T,2)-1)
 Der=T(i+1)-T(i);
 if Der<0
-   j=j+1
-   i
+   j=j+1;
 end
 T2(i+1)=T(i+1)+j*128;
 end
