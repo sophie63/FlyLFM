@@ -18,7 +18,7 @@ clear D
 
 %% SVD
 % Use twice the inflexion point 
-Npc=150;
+Npc=300;
 [u,s,v]=nets_svds(R,Npc);
 
 % Save PCA maps
@@ -33,7 +33,10 @@ prompt = 'What are the components that correspond to movement? ';
 Id1 = input(prompt)
 Id2 = input(prompt)
 Id3 = input(prompt)
-Id=[Id1,Id2,Id3]
+Id4 = input(prompt)
+Id5 = input(prompt)
+Id6 = input(prompt)
+Id=[Id1,Id2,Id3,Id4,Id5,Id6]
 %Id=1:Npc;
 %Id(x)=nan;
 %Id=Id(~isnan(Id));

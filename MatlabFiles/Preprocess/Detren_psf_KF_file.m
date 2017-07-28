@@ -17,9 +17,9 @@ Fr=0.005;
 %sign of relation from deltaF/F to underlying change
 Sdff=-1;
 %position of the focal plane in the stack
-z1=34;
+z1=17;
 %distance between z stacks
-dz=3;
+dz=6;
 
 %% Open mask
 % [FileName,PathName] = uigetfile('*.nii','Select the mask file','/home/sophie/Desktop/');

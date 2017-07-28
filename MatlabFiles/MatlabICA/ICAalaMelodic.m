@@ -35,10 +35,10 @@ R=R1;
 %   R=R./repmat(stddevs,size(R,1),1);  % var-norm
 
 %% Variance normalisation ala melodic
-NPCfilt=30;
+NPCfilt=60;
 [uu,ss,vv]=nets_svds(R,NPCfilt); 
 % initial SVD to the top components
-%vv(abs(vv)<0.4*std(vv(:)))=0;
+vv(abs(vv)<0.4*std(vv(:)))=0;
 %vv(abs(vv)<2.3*std(vv(:)))=0;
 %vv(abs(vv)<0.023*std(vv(:)))=0;
 stddevs=max(std(R-uu*ss*vv'),0.01);  
@@ -46,7 +46,18 @@ stddevs=max(std(R-uu*ss*vv'),0.01);
 % Which leaves most main components not normalized
 % Note also that small values are not increased (normalized by one)
 R=R./repmat(stddevs,size(R,1),1);  % Var-norm
+Izeros=(R==0);
+Inonzeros=(R~=0);
 
+j=1;
+for i=1:size(R,2)
+    if isnan(R(5,i))
+    R1(:,j)=R(:,i);
+    j=j+1;
+    end
+end
+Rinit=R;
+R=R1;
 % Check dimentionality
 [uu,ss,vv]=nets_svds(R,1000); 
 plot(log(diag(ss)))

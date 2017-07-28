@@ -27,6 +27,7 @@ end
 P=prctile(reshape(R,size(R,1)*size(R,2),1),90);
 R1=R.*(10000/P);
 clear R
+
 R=R1;
 
 %% Simple std norm (choose between this and Smith lines below)
@@ -41,7 +42,7 @@ vv(abs(vv)<0.4*std(vv(:)))=0;
 %vv(abs(vv)<2.3*std(vv(:)))=0;
 %vv(abs(vv)<0.023*std(vv(:)))=0;
 stddevs=max(std(R-uu*ss*vv'),1);  
-% Subtract main parts of top components from data to get normalisation
+% Subtract main parts of tcop components from data to get normalisation
 % Which leaves most main components not normalized
 % Note also that small values are not increased (normalized by one)
 R=R./repmat(stddevs,size(R,1),1);  % Var-norm
@@ -53,6 +54,7 @@ plot(log(diag(ss)))
 % curve deviates from this (should be higher than the inflexion point)
 prompt = 'How many components do you want?';
 Npc = input(prompt)
+%Npc=350;
 
 %% SVD
 [u,s,v]=nets_svds(R,Npc);

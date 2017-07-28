@@ -24,6 +24,9 @@ z1 = input(prompt)
 prompt = 'What is the distance betweeen stacks?';
 dz = input(prompt)
 
+prompt = 'Over how many seconds do you want to detrend?';
+N = input(prompt)
+
 %% Open mask
 % [FileName,PathName] = uigetfile('*.nii','Select the mask file','/home/sophie/Desktop/');
 % file2=strcat(PathName,FileName)
@@ -39,12 +42,12 @@ Data=D.vol;
 S=size(Data);
 clear D
 
-%first detrend over 10 sec  
-Unbleached_data = Sdff*Detrend(Data,1/Fr);
+%first detrend over 30 sec  
+Unbleached_data = Sdff*Detrend(Data,N*Fr);
 clear Data
 
 out.vol=Unbleached_data(:,:,:,2:(S(4)-1));
-file2=strcat(file(1:size(file,2)-4),'U10s.nii');
+file2=strcat(file(1:size(file,2)-4),'U',num2str(N),'s.nii');
 err = MRIwrite(out,file2);
 
 clear out

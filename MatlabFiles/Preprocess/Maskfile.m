@@ -1,11 +1,11 @@
 clear all
 %open mask
-[FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
+[FileName,PathName] = uigetfile('*.nii','Select the Mask file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)
 M=MRIread(file);
 Mask=M.vol;
-%M2=Mask./(max(max(max(Mask))));
-%Mask=1-Mask;%use that line if mask from segmentation editor
+M2=Mask./(max(max(max(Mask))));
+%M2=1-M2;%use that line if mask from segmentation editor
 %Md=double(M);
 
 

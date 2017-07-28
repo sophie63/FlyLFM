@@ -97,16 +97,24 @@ handles.filename = strcat(chemin,nom);
 handles.nom = nom;
 fichier = strcat(chemin,nom)
 
-mov=aviread(fichier);
-S=size(mov)
-num_images = S(2)
+mov = VideoReader(fichier);
 
 DATA=[];
 
-for i=1:num_images
-A=mov(i).cdata;
-DATA(:,:,i)=A(:,:,1); 
+ii = 1;
+
+while hasFrame(mov)
+   A=readFrame(mov); 
+   DATA(:,:,ii)=A(:,:,1);
+   ii = ii+1;
 end
+
+num_images=ii-1;
+
+% for i=1:num_images
+% A=imread(fichier,i);
+% DATA(:,:,i)=A(:,:,1); 
+% end
 
 Behavior=zeros(7,num_images);
 
@@ -143,7 +151,7 @@ function save_pushbutton_Callback(hObject, eventdata, handles)
 global DATA Behavior
 
 [name,path] = uiputfile('*.dat','nom du film',char(handles.filename(1)));%
-nom = strcat(path,name,'.dat');
+nom = strcat(path,name);
 
 save (nom,'Behavior','-ascii','-tabs')
 
@@ -193,6 +201,8 @@ switch eventdata.Key
     Behavior(6,handles.N)=1;    
     case 't'
     Behavior(7,handles.N)=1;
+    case 'c'
+    Behavior(:,handles.N)=0;
         end
 
 
@@ -224,6 +234,8 @@ switch eventdata.Key
     Behavior(6,handles.N)=1;    
     case 't'
     Behavior(7,handles.N)=1;
+    case 'c'
+    Behavior(:,handles.N)=0;
         end
 
 

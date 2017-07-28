@@ -1,9 +1,9 @@
-clear
+clear all
 
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)
 D=MRIread(file);
-Data=D.vol;
+Data=squeeze(D.vol);
 S=size(Data);
 
 %drop vid 
@@ -16,5 +16,5 @@ k75=Kalman_Stack_Filter(Data);
 %end
 
 %out.vol=Dkf(:,:,:,2:S(4)-1);
-out.vol=Dkf(:,:,:);
+out.vol=k75;
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'kf.nii'));
