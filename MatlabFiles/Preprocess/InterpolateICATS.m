@@ -13,8 +13,9 @@ load(strcat(PathName,FileName))
 file=strcat(PathName,FileName)
 load(file)
 
+
 %TimefluoICA=TimeFluoOn;
-TimefluoICA=TimeFluoOn(3:(end-2));
+TimefluoICA=TimeFluoOn(2:(end-1));
 
 T=TimeFluoOnVid';
 
@@ -43,8 +44,10 @@ Endvid
 Tvid=T(Initvid:Endvid);
 
 
-for i=1:99
-       TS2zmap(:,i)=interp1(TimefluoICA',squeeze(TSzmapo(:,i)),Tvid',[]);
+
+
+for i=1:size(TSo,2)
+       TS2(:,i)=interp1(TimefluoICA',squeeze(TSo(:,i)),Tvid',[]);
 end
 
-save(strcat(file(1:size(file,2)-4),'int.mat'),'TS2zmap')
+save(strcat(file(1:size(file,2)-4),'int.mat'),'TS2')

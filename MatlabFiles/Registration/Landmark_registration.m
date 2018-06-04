@@ -1,6 +1,7 @@
 %make average of the time series
 
-javaaddpath '/home/sophie/Matlab/java/mij.jar'
+%javaaddpath '/home/sophie/Matlab/java/mij.jar'
+javaaddpath '/usr/local/MATLAB/R2014b/java/mij/mij.jar'
 javaaddpath '/home/sophie/Fiji.app/jars/ij-1.48q.jar'
 MIJI;
 %drag and drop data

@@ -1,10 +1,10 @@
 clear all
 
 
-prompt = 'What is the time of the first odor?';
+prompt = 'What is the frame number of the first odor?';
 Todor = input(prompt)
 
-prompt = 'What is the time of the first flash?';
+prompt = 'What is the frame number of the first flash?';
 Tflash = input(prompt)
 
 prompt = 'What is the frame rate?';

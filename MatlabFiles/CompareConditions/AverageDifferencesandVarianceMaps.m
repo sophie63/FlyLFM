@@ -15,22 +15,23 @@ file=strcat(PathName,FileName)
 D=MRIread(file);
 Data=D.vol;
 S=size(Data);
+Data(isnan(Data))=0;
 
 % Plot and choose a threshold
 plot(Xk(:,3))
-prompt = 'What is the threshold for walking?';
-Thresh = input(prompt)
-%Thresh=0.2;
-
+%prompt = 'What is the threshold for walking?';
+%Thresh = input(prompt)
+Thresh=800;
+Xk(:,5)
 % Rest: if not walk, not groom (and not weird if that would be there)
 Walkt=zeros(Sx(1),1);
-Walkt(Xk(:,3)>Thresh)=1;
+Walkt(Xk(:,4)>Thresh)=1;
 
-Groomt=zeros(Sx(1),1);
-%Groomt((Xk(:,5)>200)&(Xk(:,4)<Thresh))=1;
+%Groomt=zeros(Sx(1),1);
+Groomt((Xk(:,5)>800)&(Xk(:,4)<Thresh))=1;
 
 Rest=zeros(Sx(1),1);
-Rest(~(logical(Groomt)|logical(Walkt)))=1;
+Rest(Xk(:,6)>800)=1;
 
 LeftminRight=Xk(:,1)-Xk(:,2);
 Left2=LeftminRight;
@@ -46,6 +47,7 @@ Dleft=zeros(S(1),S(2),S(3),1);
 Dright=zeros(S(1),S(2),S(3),1);
 
 for i =1:S(4)
+%for i =1:2000
     Dwalk(:,:,:,1)=Dwalk(:,:,:,1)+Data(:,:,:,i)*Walkt(i);
     Dgroom(:,:,:,1)=Dgroom(:,:,:,1)+Data(:,:,:,i)*Groomt(i);    
     Drest(:,:,:,1)=Drest(:,:,:,1)+Data(:,:,:,i)*Rest(i);
@@ -74,7 +76,8 @@ D3m=Montage3(D3);
 Dm=cat(3,D1m,D2m,D3m);
 Dm4norm=Dm;
 Dm4norm(Dm==1)=0;
-Sn=size(Dm4norm); M=prctile(reshape(Dm4norm,Sn(1)*Sn(2)*Sn(3),1),99.9);
+Sn=size(Dm4norm); 
+M=prctile(reshape(Dm4norm,Sn(1)*Sn(2)*Sn(3),1),99.9);
 fullFileName = fullfile(strcat(file(1:size(file,2)-4),'LeftMinRightM.PNG'));
 imwrite(Dm/M, fullFileName);
 

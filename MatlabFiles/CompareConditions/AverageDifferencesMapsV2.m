@@ -17,17 +17,18 @@ S=size(Data);
 % Plot and choose a threshold
 plot(Xk(:,4))
 
-Thresh=200;
+Thresh=450;
 
 % Rest: if not walk, not groom (and not weird if that would be there)
 Walkt=zeros(Sx(1),1);
-Walkt(Xk(:,3)>Thresh)=1;
+Walkt(Xk(:,4)>Thresh)=1;
 
 Groomt=zeros(Sx(1),1);
-Groomt((Xk(:,5)>50)&(Xk(:,3)<Thresh))=1;
+Groomt((Xk(:,5)>Thresh)&(Xk(:,3)<Thresh/4))=1;
 
 Rest=zeros(Sx(1),1);
-Rest(~(logical(Groomt)|logical(Walkt)))=1;
+Rest(Xk(:,6)>Thresh&(Xk(:,3)<Thresh/4))=1;
+
 
 %% Average data during walk, groom, rest and turn
 Dwalk=zeros(S(1),S(2),S(3),1);
@@ -36,7 +37,7 @@ Drest=zeros(S(1),S(2),S(3),1);
 Dleft=zeros(S(1),S(2),S(3),1);
 Dright=zeros(S(1),S(2),S(3),1);
 
-for i =1:S(4)
+for i =1:2500
     Dwalk(:,:,:,1)=Dwalk(:,:,:,1)+Data(:,:,:,i)*Walkt(i);
     Dgroom(:,:,:,1)=Dgroom(:,:,:,1)+Data(:,:,:,i)*Groomt(i);    
     Drest(:,:,:,1)=Drest(:,:,:,1)+Data(:,:,:,i)*Rest(i);

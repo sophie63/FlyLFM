@@ -1,12 +1,7 @@
-function Dcolor = ColoredSumaryMapfunc(Dica)
-
-clear all
+function Dcolor = ColoredSumaryMapfunc(file,Dica)
 
 % Open Data
-[FileName,PathName] = uigetfile('*.nii','Select the Nifti file');
-file=strcat(PathName,FileName)
-B=MRIread(file);
-D=double(B.vol);
+D=Dica;
 clear B
 S1=size(D);
 

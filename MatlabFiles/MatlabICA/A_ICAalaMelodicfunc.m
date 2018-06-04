@@ -1,5 +1,5 @@
 
-function Dica = A_ICAalaMelodicfunc(D,Npc)
+function Dica = A_ICAalaMelodicfunc(file,D,Npc)
 
 % Reshape as a space*time 2D matrix 
 S1=size(D);
@@ -52,19 +52,20 @@ save(strcat(file(1:size(file,2)-4),'PCATS'),'u')
 %pause
 % Check the PCs then, identify the components that look like movement and
 % noise and remove them before ICA
-prompt = 'What components correspond to movement? ';
-Id1 = input(prompt)
-Id2 = input(prompt)
-Id3 = input(prompt)
-Id4 = input(prompt)
-Id5 = input(prompt)
-Id6 = input(prompt)
-Id7 = input(prompt)
-Id=[Id1,Id2,Id3,Id4,Id5,Id6,Id7]
+%prompt = 'What components correspond to movement? ';
+%Id1 = input(prompt)
+%Id2 = input(prompt)
+%Id3 = input(prompt)
+%Id4 = input(prompt)
+%Id5 = input(prompt)
+%Id6 = input(prompt)
+%Id7 = input(prompt)
+%Id=[Id1,Id2,Id3,Id4,Id5,Id6,Id7]
 
-goodPC1=[1:Npc];
-goodPC1(Id)=nan;
-goodPC=goodPC1(~isnan(goodPC1));
+%goodPC1=[1:Npc];
+%goodPC1(Id)=nan;
+%goodPC=goodPC1(~isnan(goodPC1));
+goodPC=[1:Npc];
 Npc=size(goodPC,2);
 newv=v(:,goodPC);
 
@@ -117,7 +118,6 @@ for j=1:Npc
 parfor i=1:S1(4)
 TSzmap(i,j)=mean(R0(i,:).*GMz(:,j)');
 end
-j
 end
 
 TSzmapo=TSzmap(:,Order(Npc:-1:1));
@@ -130,5 +130,6 @@ for i=1:Npc
     plot(TSzmapo(:,i)/sqrt(var(TSzmapo(:,i)))+i*10+5,'b')
 end
 
+savefig(strcat(file(1:size(file,2)-4),'TimeSeries'))
 % Next step is opening the maps and time series in an ipython notebook for
 % manual sorting

@@ -1,7 +1,5 @@
 clear
 
-[FileName,PathName] = uigetfile('*.nii','Select the Nifti file','MultiSelect','on');
-files=strcat(PathName,FileName);
 
 
 for j=1:size(files,2)

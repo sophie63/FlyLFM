@@ -18,6 +18,8 @@ R2=R(i,:);
 R2(abs(R2)<(3*S))=0;
 D2(:,:,:,i)=reshape(R2,[S1(1),S1(2),S1(3)]);
 end
+out.vol = D2;
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'thresh3std.nii'));
 
  C(:,1)=[1,0,0];
  C(:,2)=[0,1,0];
@@ -31,6 +33,8 @@ for i=1:S1(4)
     Dcolor(:,:,:,2)=Dcolor(:,:,:,2)+D2(:,:,:,i)*C(2,(i-ceil((i-6)/6)*6));
     Dcolor(:,:,:,3)=Dcolor(:,:,:,3)+D2(:,:,:,i)*C(3,(i-ceil((i-6)/6)*6));
 end
+
+%Dcolor2=cat(3,Dcolor1,Dcolor2);
 
 out.vol = Dcolor;
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'color.nii'));

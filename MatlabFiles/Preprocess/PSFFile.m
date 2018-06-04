@@ -2,14 +2,16 @@
 % brain regions due to low resolution
 
 %parameters to fill up
-dz=6;
-z1=14;
+dz=12;
+prompt = 'What is the position of the focal plane in the stack?';
+z1 = input(prompt)
 
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)
 D=MRIread(file);
 Data=D.vol;
 S=size(Data);
+clear D
 
 
 Z0=1:size(Data,3);

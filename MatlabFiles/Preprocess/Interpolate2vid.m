@@ -1,24 +1,28 @@
 clear all
 
 % Open Time video
-[FileName,PathName] = uigetfile('*.mat','Select the time for the video');
-load(strcat(PathName,FileName))
+[FileName1,PathName1] = uigetfile('*.mat','Select the time for the video');
+
 
 % Open Time camera
-[FileName,PathName] = uigetfile('*.mat','Select the time for the fluo');
-load(strcat(PathName,FileName))
+[FileName2,PathName2] = uigetfile('*.mat','Select the time for the fluo');
+
 
 % Open Data
-[FileName,PathName] = uigetfile('*.nii','Select the Nifti file');
-file=strcat(PathName,FileName)
+[FileName3,PathName3] = uigetfile('*.nii','Select the Nifti file');
+
+
+file=strcat(PathName3,FileName3)
 B=MRIread(file);
 D=double(B.vol);
 clear B
+load(strcat(PathName1,FileName1))
+load(strcat(PathName2,FileName2))
 
-%TimefluoICA=TimeFluoOn;
-TimefluoICA=TimeFluoOn(2:(end-1));
+TimefluoICA=TimeFluoOn(2:(end-1))';
 
-T=TimeFluoOnVid';
+%T=TimeFluoOnVid;
+T=Time/1000;
 
 for i=1:size(T,2)
     if T(i)>TimefluoICA(1,1)

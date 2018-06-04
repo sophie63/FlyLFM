@@ -1,12 +1,12 @@
-% This script performs PCA and spatial ICA with a normalisation similar to melodic from FSL 
+% This script performs PCA and spatial ICA with a normalization similar to melodic from FSL 
 
 clear all
 
-% Open Data
+% Prompt window to select target data file. Read in data file.
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file');
 file=strcat(PathName,FileName)
 B=MRIread(file);
-D=double(B.vol);
+D=double(B.vol); 
 clear B
 
 % Reshape as a space*time 2D matrix 
@@ -48,13 +48,16 @@ stddevs=max(std(R-uu*ss*vv'),1);
 R=R./repmat(stddevs,size(R,1),1);  % Var-norm
 
 % Check dimentionality
+'done var norm'
 [uu,ss,vv]=nets_svds(R,1000); 
 plot(log(diag(ss)))
-% Typically draw a line using the tail and choose Npc at the point the
-% curve deviates from this (should be higher than the inflexion point)
-prompt = 'How many components do you want?';
-Npc = input(prompt)
-%Npc=350;
+% Choose NPC at twice the elbow (empirically found that allows to get most
+% activity related components without too many noise components
+Spectrum=log(diag(ss));
+Diffvalue=-(max(Spectrum)-min(Spectrum))/1000;
+DiffFunc=smooth(diff(smooth(Spectrum,20)));
+Npc=2*find(DiffFunc>Diffvalue, 1 );
+
 
 %% SVD
 [u,s,v]=nets_svds(R,Npc);
@@ -69,7 +72,7 @@ err = MRIwrite(out4,strcat(file(1:size(file,2)-4),'PCAMaps.nii'));
 
 save(strcat(file(1:size(file,2)-4),'PCATS'),'u')
 
-%pause
+% pause
 % Check the PCs then, identify the components that look like movement and
 % noise and remove them before ICA
 prompt = 'What components correspond to movement? ';

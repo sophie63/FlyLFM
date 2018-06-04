@@ -12,8 +12,12 @@ prompt = 'What is the distance betweeen stacks?';
 dz= input(prompt)
 
 prompt = 'What is the xy resolution?';
-dx= input(prompt)
+dx1= input(prompt)
 
+prompt = 'What is the magnification?';
+Mag= input(prompt)
+
+dx=dx1
 
 [FileName,PathName] = uigetfile('*.nii','Select the average of the data Nifti file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)
@@ -32,7 +36,7 @@ Masks2=zeros(Sm(1),Sm(2),Sm(3),87);
 MasksResized=zeros(S(1),S(2),S(3),87);
 for j=1:87
     Masks2(:,:,:,j)=(Masks==j);
-    for i=1:S(3)
+    parfor i=1:Sm(3)
         MasksResized(:,:,i,j)=imresize(Masks2(:,:,i,j),[S(1),S(2)]);
     end
 end
@@ -60,7 +64,7 @@ while k<=(size(Data,3))
     else
         Dpsf2(:,:,j,i)=Data(:,:,k,i);
         Znew(j)=Zinit(k);
-        nxy=int8((abs(Znew(j))*0.075+3.3)/(2*dx))
+        nxy=int8((abs(Znew(j))*0.075+3.3)/(2*dx));
         Dtrim(:,:,j,i)=Trim2D(Dpsf2(:,:,j,i),nxy);
         j=j+1;
         k=k+1;
@@ -71,4 +75,3 @@ end
 
 out.vol=Dtrim;
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'fullpsftrimmed.nii'));
-

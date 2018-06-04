@@ -1,3 +1,4 @@
+clear all
 [FileName,PathName] = uigetfile('*.nii','Select the registered template file','/home/sophie/Desktop/');
 file=strcat(PathName,FileName)
 D=MRIread(file);

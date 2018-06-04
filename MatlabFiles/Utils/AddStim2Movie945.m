@@ -7,7 +7,8 @@ D=B.vol;
 S=size(D);
 
 % Make stimulus
-Tvid=T(Initvid:Endvid);
+%Tvid=T(Initvid:Endvid);
+Tvid=(1:11213)*0.02;
 
 Flashes=zeros(size(Tvid));
 Odor=zeros(size(Tvid));

@@ -6,7 +6,7 @@
 % * Projecting the images along the psf depth to decrease dimentionality a
 %  and concentrate the information
 % * Denoising using a Kalman Filter 
-% Note that files for each steps are saved so make sure that enough space
+% Note that files for each steps are saved so make sure that enough spacec
 % is available on disk
 
 
@@ -55,7 +55,7 @@ clear out
 
 %%Mask the detrended data
 S=size(Unbleached_data);
-
+M2=squeeze(M2);
 parfor i=1:S(4)
     DM(:,:,:,i)=M2.*Unbleached_data(:,:,:,i);
 end
@@ -118,7 +118,3 @@ clear Dpsf2
 
 out.vol=Dkf(:,:,:,2:S(4)-1);
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'dFF',num2str(N),'sMpsfkf.nii'));
-
-
-
-

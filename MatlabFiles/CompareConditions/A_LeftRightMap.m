@@ -13,21 +13,25 @@ file=strcat(PathName,FileName)
 D=MRIread(file);
 Data=D.vol;
 S=size(Data);
+Data(Data<0)=0;
 
-% LeftminRight=Xk(:,1)-Xk(:,2);
-% Left2=LeftminRight;
-% Left2(LeftminRight<0)=0;
-% Right2=-LeftminRight;
-% Right2(LeftminRight>0)=0;
+%Only keep the times when there is a clear flow in one direction compared
+%to the other
+ LeftminRight=Xk(:,1)-Xk(:,2);
+ Left2=Xk(:,1);
+ Left2(LeftminRight<60)=0;
+ Right2=Xk(:,2);
+ Right2((-LeftminRight)<60)=0;
 
-Left2=squeeze(Xk(:,1));
-Right2=squeeze(Xk(:,2));
+%Left2=squeeze(Xk(:,1));
+%Right2=squeeze(Xk(:,2));
 
 %% Average data during walk, groom, rest and turn
 Dleft=zeros(S(1),S(2),S(3),1);
 Dright=zeros(S(1),S(2),S(3),1);
 
 for i =1:S(4)
+%for i =1000:4000    
     Dleft(:,:,:,1)=Dleft(:,:,:,1)+Data(:,:,:,i)*Left2(i);
     Dright(:,:,:,1)=Dright(:,:,:,1)+Data(:,:,:,i)*Right2(i);
 end
@@ -35,19 +39,25 @@ end
 Dleft=Dleft/(sum(Left2));
 Dright=Dright/(sum(Right2));
 
-% DleftrightN=Dleft-Dright;
-% D1=DleftrightN;
-% D1(DleftrightN<0)=0;
-% D2=-DleftrightN;
-% D2(DleftrightN>0)=0;
-D1=Dleft;
-M=prctile(reshape(D1,S(1)*S(2)*S(3),1),99.9);
+ DleftrightN=Dleft-Dright;
+ D1=DleftrightN;
+ D1(D1<0)=0;
+ D2=-DleftrightN;
+ D2(D2<0)=0;
+%D1=Dleft;
+M=prctile(reshape(D1,S(1)*S(2)*S(3),1),99)
 D1=D1/M;
-D2=Dright;
-M=prctile(reshape(D2,S(1)*S(2)*S(3),1),99.9);
+M2=max(max(max(D1)));
+
+%D2=Dright;
+M=prctile(reshape(D2,S(1)*S(2)*S(3),1),99)
 D2=D2/M;
+M2b=max(max(max(D2)));
+D1=D1/max(M2,M2b);
+D2=D2/max(M2,M2b);
 out.vol=cat(4,D1,D2);
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),'LeftRight.nii'));
+
 
 % It is unclear for me why the normalisation is needed/justified here. How
 % come the intensity of left and right are not the same after normalisation
@@ -72,3 +82,4 @@ Sn=size(Dm4norm);
 
 fullFileName = fullfile(strcat(file(1:size(file,2)-4),'LeftRightM.PNG'));
 imwrite(Dm, fullFileName);
+
