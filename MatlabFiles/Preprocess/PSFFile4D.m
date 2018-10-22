@@ -4,7 +4,7 @@
 clear all
 
 %parameters to fill up
-dz=12;
+dz=6;
 prompt = 'What is the position of the focal plane in the stack?';
 z1 = input(prompt)
 

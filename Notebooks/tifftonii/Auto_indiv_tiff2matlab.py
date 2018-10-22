@@ -170,7 +170,7 @@ for i,fn in enumerate(data_list):
 
     # change directory to open matlab
     os.chdir('/home/sophie/')
-    subprocess.call(["matlab -nosplash -nodisplay -r \"pipeline_dFF_psf_KF(\'%s\',%d,%d,%d,%d)\""%(fn,Fr,Sdff,z1,dz)], shell=True)
+    subprocess.call(["matlab -nosplash -nodisplay -r \"pipeline_dFF_psf_KF(\'%s\',%d,%d,%d,%d)\""%(file_name,Fr,Sdff,z1,dz)], shell=True)
 
 # concatenate dkf and save
 dkf_list = []

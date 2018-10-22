@@ -17,7 +17,7 @@ end
 %%% ##########Copy 1######
 
 for i=1:S(1)
-    cmd=['scp -o "StrictHostKeyChecking no" -r -i ~/Downloads/',D{1}{2*(i-1)+2},'.pem 100624_ss1_f1250_6microns.lfc ubuntu@',D{1}{2*(i-1)+1},':~/.\n'];
+    cmd=['scp -o "StrictHostKeyChecking no" -r -i ~/Downloads/',D{1}{2*(i-1)+2},'.pem ~/Downloads/100621_ss2_f1250_6microns.lfc ubuntu@',D{1}{2*(i-1)+1},':~/.\n'];
     fprintf(cmd);
 end
 %%% ########## copy2 #####
@@ -32,7 +32,7 @@ for i=1:S(1)
 %    cmd0=['gnome-terminal "'];
 %    fprintf(cmd0);
     cmd=['ssh -o "StrictHostKeyChecking no" -i ~/Downloads/',D{1}{2*(i-1)+2},'.pem ubuntu@',D{1}{2*(i-1)+1},' \n'];
-    cmdStr=['for i in {',num2str((i-1)*ceil(out/S(1))),'..',num2str(i*ceil(out/S(1))),'}; do printf -v j \"%%04d\" $i; python2.7 ~/stanford_lfanalyze_v0.4/lfdeconvolve.py ~/',folder_name2(end-9:end),'_$j.tif -c 100624_ss1_f1250_6microns.lfc -o ~/',folder_name2(end-5:end),'ss1/',folder_name2(end-5:end),'ss1-$j.tif --max-iter=30; rm ~/',folder_name2(end-9:end),'_$j.tif; done; \n'];
+    cmdStr=['for i in {',num2str((i-1)*ceil(out/S(1))),'..',num2str(i*ceil(out/S(1))),'}; do printf -v j \"%%04d\" $i; python2.7 ~/stanford_lfanalyze_v0.4/lfdeconvolve.py ~/',folder_name2(end-9:end),'_$j.tif -c 100621_ss2_f1250_6microns.lfc -o ~/',folder_name2(end-5:end),'ss2/',folder_name2(end-5:end),'ss-$j.tif --max-iter=30; rm ~/',folder_name2(end-9:end),'_$j.tif; done; \n'];
     
     fprintf(cmd);
     fprintf(cmdStr);
@@ -42,7 +42,7 @@ end
 
 % Can be separated to terminals to save time copying
 for i=1:S(1)
-    cmd=['scp -o "StrictHostKeyChecking no" -r -i ~/Downloads/',D{1}{2*(i-1)+2},'.pem ubuntu@',D{1}{2*(i-1)+1},':~/*ss1 /media/sophie/New\\ Volume/.\n'];    
+    cmd=['scp -o "StrictHostKeyChecking no" -r -i ~/Downloads/',D{1}{2*(i-1)+2},'.pem ubuntu@',D{1}{2*(i-1)+1},':~/*ss2 /media/test/.\n'];    
     fprintf(cmd);
 end
   

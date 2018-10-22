@@ -1,4 +1,4 @@
-fmask = fileread('/media/sophie/db554c18-e3eb-41e2-afad-7de1c92bf4a5/paper_dataset_mask_lists.txt');
+fmask = fileread('/media/test5');
 Mlist = strsplit(fmask);
 fdata = fileread('/media/sophie/db554c18-e3eb-41e2-afad-7de1c92bf4a5/paper_dataset_dff_lists.txt');
 Dlist = strsplit(fdata);

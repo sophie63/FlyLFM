@@ -117,6 +117,11 @@ TSs=TS.*repmat(sign(GMzpm+GMznm),size(TS,1),1);
 TSo=TSs(:,Order(Npc:-1:1));
 GMo=GMs(:,Order(Npc:-1:1));
 
+% Get back df/f (need to add stdev?)
+for i=1:Npc
+TSmean(:,i)=(P/10000)*TSo(:,i)/mean(GMo(:,i)./stddevs');
+end
+
 % Reform volumes
 for i=1:size(goodPC,2)
 Dica(:,:,:,i)=reshape(GMo(:,i),[S1(1),S1(2),S1(3)]);
@@ -126,32 +131,6 @@ end
 out.vol = Dica;
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'IC.nii'));
 
-save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'TS'),'TSo')
+save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'TS'),'TSmean')
 
-% Use Zscored maps as region of interest
-for i=1:Npc
-    GM1vn(:,i)=GM(:,i)/(sqrt(var(GM(:,i))));
-end
 
-GMz=GM;
-GMz(GM1vn<2.5)=0;
-
-for j=1:Npc
-parfor i=1:S1(4)
-TSzmap(i,j)=mean(R0(i,:).*GMz(:,j)');
-end
-j
-end
-
-TSzmapo=TSzmap(:,Order(Npc:-1:1));
-save(strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NPCfilt),'TSzmap'),'TSzmapo')
-
-figure
-hold on
-for i=1:Npc
-    plot(TSo(:,i)/sqrt(var(TSo(:,i)))+i*10,'r')
-    plot(TSzmapo(:,i)/sqrt(var(TSzmapo(:,i)))+i*10+5,'b')
-end
-
-% Next step is opening the maps and time series in an ipython notebook for
-% manual sorting

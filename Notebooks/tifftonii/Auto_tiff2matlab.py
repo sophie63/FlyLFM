@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import subprocess
 
 
-saving_path = '/media/sophie/470fddca-e336-42c7-9d91-b91361d994ea/100621series/'
+saving_path = '/media/test3/100621series/'
 
 path_list = ['/media/sophie/New Volume/100621ss1',
              '/media/sophie/New Volume/100622ss1',
@@ -36,7 +36,8 @@ def Sq(X):
 data_list = []
 index_list = []
 series_name = path_list[0].split('/')[-1][:6]+'series'
-#saving_path = saving_path+series_name+'/'
+
+
 # create the series dir
 if not os.path.exists(saving_path):
     os.makedirs(saving_path)
@@ -70,10 +71,10 @@ for path in path_list:
     Mav=M.mean()
 
     # Get approximate on and off times
-    liston=[i for i in range(len(M)) if M[i]>Mav*0.7]
+    liston=[i for i in range(len(M)) if M[i]>Mav*0.8]
     liston, listoff = [],[]
     for i in range(len(M)):
-        if M[i] > Mav*0.7:
+        if M[i] > Mav*0.8:
             liston.append(i)
         else:
             listoff.append(i)
@@ -98,7 +99,7 @@ for path in path_list:
     		plt.savefig(saving_path+Dataname[:6]+'/'+Dataname+'_Fit_light_on.png')
             #print ('Light on fitting plot saved at ', '/media/sophie/470fddca-e336-42c7-9d91-b91361d994ea/'+Dataname+'Fit_light_on.png')
 
-    	elif liston[-1] != len(M) -1 : # use len(M)-1 if zero indexing
+    	if ONint+liston[-1] != len(M) -1 : # use len(M)-1 if zero indexing
     		print ('Estimating the time when light is off...')
     		Ms=M[range(liston[len(liston)-1]-6,liston[len(liston)-1]+6)]
     		res = scipy.optimize.minimize(Sq,x0=[6,3,8,-1])
@@ -179,9 +180,12 @@ process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 output, error = process.communicate()
 
 
+
 #open nii image
+print 'reading reg image'
 img = nib.load(saving_path+series_name+'reg.nii')
 img_data = img.get_data()
+
 
 # cut image based on index list, save individuals to nii and feed in to matlab dFF_psf_kf
 idx_list = [0]+ list(np.cumsum(index_list))
@@ -192,7 +196,7 @@ for i in range(1,len(idx_list)):
     nib.save(img, file_name)
     # change directory to open matlab
     os.chdir('/home/sophie/')
-    subprocess.call(["matlab -nosplash -nodisplay -r \"pipeline_dFF_psf_KF(\'%s\',%d,%d,%d,%d)\""%(fn,Fr,Sdff,z1,dz)], shell=True)
+    subprocess.call(["matlab -nosplash -nodisplay -r \"pipeline_dFF_psf_KF(\'%s\',%d,%d,%d,%d)\""%(file_name,Fr,Sdff,z1,dz)], shell=True)
 
 # concatenate dkf and save
 dkf_list = []

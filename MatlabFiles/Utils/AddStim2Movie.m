@@ -7,7 +7,7 @@ S=size(D);
 
 % Make stimulus
 %Tvid=T(Initvid:Endvid);
-Tvid=T;
+Tvid=TimeFluoOn;
 Fr=100;
 Flashes=zeros(size(Tvid));
 Odor=zeros(size(Tvid));
@@ -21,9 +21,9 @@ Odor=zeros(size(Tvid));
 % end
 
 % 
-for j=1:size(Tvid)
-    for (i=1:3)
-    if (Tvid(j)>(12+(i-1)*7+j*0.003/Fr) && Tvid(j)<(14+(i-1)*7)+j*0.003/Fr)
+for j=1:size(Tvid')
+    for (i=1:5)
+    if (Tvid(j)>(15+(i-1)*10) && Tvid(j)<(15+(i-1)*10)+1)
         Odor(j)=1;
     end
 end

@@ -1,6 +1,6 @@
 %clear all
 %open mask
-[FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/media/sophie/008C0665790F0763/ComboPanNeuronalGCaMP6');
+[FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/media');
 file=strcat(PathName,FileName)
 M=MRIread(file);
 Mask=M.vol;
@@ -9,7 +9,7 @@ Mask=M.vol;
 %Md=double(M);
 
 %open data
-[FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/media/sophie/008C0665790F0763/ComboPanNeuronalGCaMP6');
+[FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/media');
 file=strcat(PathName,FileName)
 D=MRIread(file);
 Data=D.vol;
@@ -21,8 +21,9 @@ Data(isnan(Data))=0;
 
 for i=1:S(4)
     for j=1:SM2(4)
-        TS(i,j)=sum(sum(sum(M2(:,:,:,j).*squeeze(Data(:,:,:,i)))))/sum(sum(sum(M2(:,:,:,j))));
+        Sm(i,j)=sum(sum(sum(M2(:,:,:,j).*squeeze(Data(:,:,:,i)))))/sum(sum(sum(M2(:,:,:,j))));
     end
 end
 
+save(strcat(file(1:size(file,2)-4),'ICROI.mat'),'Sm')
 
