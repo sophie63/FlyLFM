@@ -1,0 +1,76 @@
+This software performs 3-D deconvolution of light fields using the algorithm described in [3].
+For more information about this algorithm and about light field microscopy in general, please
+consult our publications:
+
+
+[1] M. Levoy, R. Ng, A. Adams, M. Footer, and M. Horowitz, “Light
+field microscopy,” ACM SIGGRAPH 2006 Papers, pp. 924–934, 2006.
+
+[2] M. Levoy, Z. Zhang, and I. McDowall, “Recording and controlling
+the 4D light field in a microscope using microlens arrays,” Journal of
+Microscopy, vol. 235, no. 2, pp. 144–162, 2009.
+
+[3] M. Broxton, L. Grosenick, S. Yang, N. Cohen, A.  Andalman, 
+K. Deisseroth, and M. Levoy, "Wave optics theory and 3-D deconvolution
+for the light field microscope," Opt. Express 21, 25418-25439 (2013)
+
+
+This code is provided as-is: you are welcome and encouraged to
+give us feedback on how the code works, but we cannot promise to
+provide in-depth support at this time.  Our focus for the next several
+months will be on completing our upcoming neuroscience publication so
+that we can release an open source and fully supported version of this
+software early next year.
+
+
+For questions, please contact Michael Broxton <broxton@stanford.edu>
+or Logan Grosenick <logang@stanford.edu>.
+
+
+Partial list of dependencies
+----------------------------
+OpenCV 2.3.1 or later (with python bindings) (`apt-get install libopencv-dev python-opencv`)
+Numpy
+Scipy
+scons
+pyopencl, and a graphics card capable of running OpenCL programs (OpenCL v1.1 or later)
+scikit-learn
+
+
+Example of use
+--------------
+
+This code can be used to construct focal stacks and deconvolved
+volumes from raw light field images captured on the light field
+microscope.
+
+There is example imagery included in the 'examples/ant_leg'
+subdirectory.  Consult the README contain therein for a usage
+example.
+
+
+
+Current Contributors
+--------------------
+
+Logan Grosenick
+Michael Broxton
+Samuel Yang
+Noy Cohen
+Aaron Andalman
+Karl Deisseroth
+Marc Levoy
+
+Alumni and Past Contributors
+----------------------------
+
+Zhengyun Zhang
+Ian McDowall
+Ren Ng
+Andrew Adams
+Matthew Footer
+Mark Horowitz
+
+All code Copyright 2013 Stanford University.
+
+

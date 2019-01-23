@@ -1,0 +1,27 @@
+
+The calibration file: <filename>.lfc is stored in HDF5 format.  It contains:
+
+Optical parameters: 
+/timestamp
+/calibration_image_filename
+/dark_frame_filename
+/comments
+/optics/magnification                 [float - units: none]
+        focal_length                  [float - units: none]
+        na                            [float - units: none]
+        medium-index                  [float - units: none]
+        sample-index                  [float - units: none]
+        array-pitch                   [float - units: um]
+Geometric Calibration
+/geometric/geometric_calibration_type    [string]
+           forward (or None)             [3x2 numpy array]
+           backward (or None)            [3x2 numpy array]
+           calibrated_nu                 [int]
+           calibrated_nv                 [int]
+           calibrated_ns                 [int]
+           calibrated_nt                 [int]
+Radiometric Calibration
+/radiometry/radiometric_calibration_type  [string]
+            aperture (or None)            [hex string -- serialized using numpy's tostring() and fromstring()]
+Rayspread Database
+/rayspread/rayspread_db               [stored as pickled python object]
