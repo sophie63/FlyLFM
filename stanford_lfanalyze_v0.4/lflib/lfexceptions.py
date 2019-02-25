@@ -1,0 +1,2 @@
+class ZeroImageException(Exception):
+    pass

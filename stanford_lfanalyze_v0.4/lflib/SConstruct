@@ -1,0 +1,158 @@
+import buildsystem.support as buildsupport
+from buildsystem.boost import *
+from buildsystem.opencv import *
+from buildsystem.arroyo import *
+
+import os
+import SCons.Util
+
+# --------------------------------------
+# ENVIRONMENT VARIABLES & COMPILER FLAGS
+# --------------------------------------
+
+env = Environment(ENV=os.environ, tools = ["default"], toolpath = '.' )
+
+if "win32" == os.sys.platform:
+
+    for pathdir in env['ENV']['PATH'].split(os.pathsep):
+        if os.path.exists(os.path.join(pathdir, 'cl.exe')):
+            print( "[Visual Studio] : " + pathdir )
+            break
+        else:
+            # use current environment
+            env['ENV'] = dict(os.environ)
+
+    print '***', env['CXXFLAGS']
+
+else:
+    env.Append(CXXFLAGS = ' -Wall -I. -I/usr/X11/include -O3')
+    env.Append(LINKFLAGS = ' -L/usr/X11/lib -O3')
+
+    if os.environ.has_key('CXX'):
+        env.Replace(CXX = os.environ['CXX'])
+        print("\t--> Using C++ compiler " + os.environ['CXX'])
+        
+    if os.environ.has_key('CC'):
+        env.Replace(CC = os.environ['CC'])
+        print("\t--> Using C compiler " + os.environ['CC'])
+
+    if os.environ.has_key('CXXFLAGS'):
+        env.Append(CXXFLAGS = os.environ['CXXFLAGS'])
+        print("\t--> Appending custom CXXFLAGS : " + os.environ['CXXFLAGS'])
+
+    if os.environ.has_key('CFLAGS'):
+        env.Append(CFLAGS = os.environ['CFLAGS'])
+        print("\t--> Appending custom CFLAGS : " + os.environ['CFLAGS'])
+
+    if os.environ.has_key('LDFLAGS'):
+        env.Append(LINKFLAGS = os.environ['LDFLAGS'])
+        print("\t--> Appending custom LDFLAGS : " + os.environ['LDFLAGS'])
+
+# -----------------------
+# BASIC COMPILER SETUP
+# -----------------------
+
+conf = Configure(env)
+
+if "win32" == os.sys.platform:
+
+    # /EHsc exception handling style for visual studio /W3 warning
+    # level.  /MDd selects dynamically linked library.
+    conf.env.Append( CPPFLAGS=" /EHsc /MD" )
+
+    # These #define's are used in the MM code to switch between
+    # Windows/non-Windows code.
+    conf.env.Append( CPPDEFINES=[ "WIN32", "_WINDOWS", "MODULE_EXPORTS" ] )
+
+if not conf.CheckCXX():
+    print('!! Your compiler and/or environment is not correctly configured.')
+    Exit(0)
+
+env = conf.Finish()
+
+# ---------------------------
+# BUILD & INSTALL DIRECTORIES
+# ---------------------------
+
+env['PREFIX'] = GetLaunchDir() + os.sep + "build" + os.sep
+env.Alias('stage', env['PREFIX'])
+print("Staging directory: " + env['PREFIX'])
+
+env['INSTALL_LIB_DIR'] = env['PREFIX'] + os.sep + "lib"
+env['INSTALL_INC_DIR'] = env['PREFIX'] + os.sep +  "include"
+env['INSTALL_BIN_DIR'] = env['PREFIX'] +  os.sep + "bin"
+
+#----------------------------------------------------------------------------------
+
+#-------------
+# lflib
+#-------------
+
+# Add search paths to external libraries
+conf = Configure(env)
+
+# Setup boost
+#setup_boost_environment(conf, ['system', 'thread', 'filesystem', 'program_options', 'date_time'])
+
+# OpenCV
+#setup_opencv_environment(conf, ['core', 'imgproc', 'highgui'])
+
+# Arroyo
+#setup_arroyo_environment(conf)
+
+env = conf.Finish()
+
+#-------------
+# lflib.dylib
+#-------------
+
+lflib_sources = Split("""
+                      rayspread.cc
+                      longobject.cc
+                      gauss_2d_sphere.c
+                      """)
+lflib_target  = "lf"
+env.Append(CXXFLAGS = '-I/usr/local/include')
+env.Append(LINKFLAGS = '-L/usr/local/lib -lopencv_core -lopencv_highgui')  
+env.Append(LIBS = ['gsl', 'gslcblas'])  # GSL is needed for sine integral function gsl_sf_Si()
+lflib_lib = buildsupport.Library(env,
+                                 target = lflib_target,
+                                 source = lflib_sources)
+
+#-------------
+# pylflib.dylib
+#-------------
+python_env = env.Clone()
+
+python_env.Append(LIBPATH = ['.'])
+python_env.Append(LIBS = ['lf', 'gsl', 'gslcblas'])  # GSL is needed for sine integral function gsl_sf_Si()
+
+# Native Python extension on OSX and linux have .so extensions, on
+# windows they have .pyd.
+shlibsuffix = '.so'
+if 'win32' == sys.platform:
+    shlibsuffix = '.pyd'
+
+# Setup python build environment
+import commands
+python_env.Append(CXXFLAGS = ' ' + commands.getoutput('python-config --cflags').strip())
+python_env.Append(LINKFLAGS = ' -L' + commands.getoutput('python-config --prefix').strip() + '/lib')
+python_env.Append(LINKFLAGS = ' ' + commands.getoutput('python-config --ldflags').strip())
+if "darwin" == os.sys.platform:  # Works on osx Lion
+    python_env.Append(CXXFLAGS = ' -Wall -I' + commands.getoutput('python-config --prefix').strip() + '/Extras/lib/python/numpy/core/include')
+else:                            # Works on linux, at least sometimes
+    python_env.Append(CXXFLAGS = ' -Wall -I' + commands.getoutput('python-config --prefix').strip() + '/lib/python2.7/site-packages/numpy/core/include')
+
+# Set up custom builders (this is hacked together on the Windows side for now).
+cython_bld = Builder(action = 'cython --cplus -o $TARGET $SOURCE')
+python_env.Append(BUILDERS = {'Cython' : cython_bld})
+python_env.Append(LIBPATH = ["."])
+
+pylflib_sources = python_env.Cython('pylflib.cc', 'pylflib.pyx')
+pylflib_target  = "pylflib"
+pylflib_lib = buildsupport.Library(python_env,
+                                   target = pylflib_target,
+                                   source = pylflib_sources,
+                                   SHLIBPREFIX='', SHLIBSUFFIX=shlibsuffix)
+
+Depends(pylflib_lib, lflib_lib)
