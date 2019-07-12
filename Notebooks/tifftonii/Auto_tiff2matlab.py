@@ -8,17 +8,14 @@ import matplotlib.pyplot as plt
 import subprocess
 
 
-saving_path = '/media/test3/100621series/'
+saving_path = '/media/sophie/Elements/100791'
 
-path_list = ['/media/sophie/New Volume/100621ss1',
-             '/media/sophie/New Volume/100622ss1',
-             '/media/sophie/New Volume/100624ss1',
-             '/media/sophie/New Volume/100626ss1',
-             '/media/sophie/New Volume/100627ss1']
+path_list = ['/media/sophie/Elements/100791ss1']
+#            '/media/test5/FreeBehaviorPanNeuronalGCaMP6/Removed/100463series/100466ss2']
 
-Fr = 100
-Sdff = 1
-z1 = 20
+Fr = 200
+Sdff = -1
+z1 = 13
 dz = 6 
 
 # Model for fitting onset and offset
@@ -52,18 +49,21 @@ for path in path_list:
         os.makedirs(saving_path+Dataname[:6])
 
     # Open one image to get the shape
-    tt = io.imread(path+'/'+Dataname+'-0002.tif') 
+    tt = io.imread(path+'/'+Dataname+'-00002.tif') 
     S=tt.shape
 
     print ('Running on '+Dataname)
     file_name_list = os.listdir(path)
     data = np.zeros([S[0],S[1],S[2],len(file_name_list)])
+    k=0
 
     for j in range(len(file_name_list)):
-        if os.path.exists(path+'/'+Dataname+'-'+str(j).zfill(4)+'.tif'):
-            tt = io.imread(path+'/'+Dataname+'-'+str(j).zfill(4)+'.tif')
-            data[:,:,:,j] = tt[:][:][:]
-
+        if os.path.exists(path+'/'+Dataname+'-'+str(j).zfill(5)+'.tif'):
+            tt = io.imread(path+'/'+Dataname+'-'+str(j).zfill(5)+'.tif')
+            k=k+1
+            data[:,:,:,k] = tt[:][:][:]
+            
+		
     print ('Loaded all image files.')
     print ('Estimating the time when light is on...')
     # Calculate average time series
@@ -81,8 +81,8 @@ for path in path_list:
 
     ONint = 0
     ON = 0
-    OFFint = len(M)-1
-    OFF = len(M)-1
+    OFFint = len(liston)-1
+    OFF = len(liston)-1
 
     if len(liston)>0:
     	if liston[0] != 0:
@@ -99,7 +99,7 @@ for path in path_list:
     		plt.savefig(saving_path+Dataname[:6]+'/'+Dataname+'_Fit_light_on.png')
             #print ('Light on fitting plot saved at ', '/media/sophie/470fddca-e336-42c7-9d91-b91361d994ea/'+Dataname+'Fit_light_on.png')
 
-    	if ONint+liston[-1] != len(M) -1 : # use len(M)-1 if zero indexing
+    	if liston[-1] < len(M) -6 : # use len(M)-1 if zero indexing
     		print ('Estimating the time when light is off...')
     		Ms=M[range(liston[len(liston)-1]-6,liston[len(liston)-1]+6)]
     		res = scipy.optimize.minimize(Sq,x0=[6,3,8,-1])
@@ -116,42 +116,42 @@ for path in path_list:
     	print('No light on detected.')
 
 
-    # Open image times
-    print('Opening time file...')
-    for f in os.listdir('/media/sophie/New Volume/Metadata/'):
-        if Dataname[:6] in f:
-            if f.endswith('csv'):
-                TimeFile='/media/sophie/New Volume/Metadata/'+Dataname[:6]+'_.csv'
-                Listfile = open(TimeFile, 'r')
-                ListTime = [line.split('\n')[0] for line in Listfile.readlines()]
-                Timespl=[float(ListTime[i].split(',')[2]) for i in range(1,len(ListTime))]
-            elif "Original" or "Info" in f:
-                TimeFile='/media/sophie/New Volume/Metadata/'+f
-                with open(TimeFile, 'r') as metafile:
-                    lines = metafile.readlines()
-                time_from_start_list = []
-                for line in lines:
-                    if "Time_From_Start" in line:
-                        split_line = line.replace('\t', ' ').replace(' = ', ' ').strip().split(' ')
-                        time_from_start_list.append((int(split_line[1]),float(split_line[3])))
-                Timespl = list(zip(*sorted(time_from_start_list))[1])
+#    # Open image times
+#    print('Opening time file...')
+#    for f in os.listdir('/media/test/Metadata/'):
+#        if Dataname[:6] in f:
+#            if f.endswith('csv'):
+#                TimeFile='/media/test/Metadata/'+Dataname[:6]+'_.csv'
+#                Listfile = open(TimeFile, 'r')
+#                ListTime = [line.split('\n')[0] for line in Listfile.readlines()]
+#                Timespl=[float(ListTime[i].split(',')[2]) for i in range(1,len(ListTime))]
+#            elif "Original" or "Info" in f:
+#                TimeFile='/media/test/Metadata/'+f
+#                with open(TimeFile, 'r') as metafile:
+#                    lines = metafile.readlines()
+#                time_from_start_list = []
+#                for line in lines:
+#                    if "Time_From_Start" in line:
+#                        split_line = line.replace('\t', ' ').replace(' = ', ' ').strip().split(' ')
+#                        time_from_start_list.append((int(split_line[1]),float(split_line[3])))
+#                #Timespl = list(zip(*sorted(time_from_start_list))[1])
 
 
     # Get times corresponding to images during light on (excitation light completely on : t=0)
-    TimeOn=[Timespl[i] for i in range(ONint,(OFFint+1))]
-    Tinit=(ON-(ONint-1))*(Timespl[ONint]-Timespl[ONint-1])+Timespl[ONint-1]
-    if OFFint == len(M)-1:
-        Toff = Timespl[OFFint]
-    else:
-        Toff=(OFFint+1-OFF)*(Timespl[OFFint+1]-Timespl[OFFint])+Timespl[OFFint]
+    #TimeOn=[Timespl[i] for i in range(ONint,(OFFint+1))]
+    #Tinit=(ON-(ONint-1))*(Timespl[ONint]-Timespl[ONint-1])+Timespl[ONint-1]
+    #if OFFint == len(M)-1:
+    #    Toff = Timespl[OFFint]
+    #else:
+     #   Toff=(OFFint+1-OFF)*(Timespl[OFFint+1]-Timespl[OFFint])+Timespl[OFFint]
 
-    print ('Saving Time on files...')
-    TimeOnFinal=np.array(TimeOn)-Tinit
-    sio.savemat(saving_path+Dataname[:6]+'/'+Dataname+'_TimeFluoOn.mat', {'TimeFluoOn':TimeOnFinal})
+    #print ('Saving Time on files...')
+    #TimeOnFinal=np.array(TimeOn)-Tinit
+    #sio.savemat(saving_path+Dataname[:6]+'/'+Dataname+'_TimeFluoOn.mat', {'TimeFluoOn':TimeOnFinal})
     
 
-    TotalTimeOn=Toff-Tinit
-    sio.savemat(saving_path+Dataname[:6]+'/'+Dataname+'_TotalTimeOn.mat', {'TotalTimeOn':TotalTimeOn})
+    #TotalTimeOn=Toff-Tinit
+    #sio.savemat(saving_path+Dataname[:6]+'/'+Dataname+'_TotalTimeOn.mat', {'TotalTimeOn':TotalTimeOn})
     
     print ('Saving frames for which the excitation is on...')
     data_list.append(data[:,:,:,range(ONint,(OFFint+1))])
@@ -182,7 +182,7 @@ output, error = process.communicate()
 
 
 #open nii image
-print 'reading reg image'
+print ('reading reg image')
 img = nib.load(saving_path+series_name+'reg.nii')
 img_data = img.get_data()
 

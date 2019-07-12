@@ -14,8 +14,10 @@ D=MRIread(file);
 Data=D.vol;
 S=size(Data);
 
+Data(isnan(Data))=0;
+
 % Plot and choose a threshold
-plot(Xk(:,4))
+plot(Xk(:,5))
 
 Thresh=450;
 
@@ -37,7 +39,7 @@ Drest=zeros(S(1),S(2),S(3),1);
 Dleft=zeros(S(1),S(2),S(3),1);
 Dright=zeros(S(1),S(2),S(3),1);
 
-for i =1:2500
+for i =1:Sx(1)
     Dwalk(:,:,:,1)=Dwalk(:,:,:,1)+Data(:,:,:,i)*Walkt(i);
     Dgroom(:,:,:,1)=Dgroom(:,:,:,1)+Data(:,:,:,i)*Groomt(i);    
     Drest(:,:,:,1)=Drest(:,:,:,1)+Data(:,:,:,i)*Rest(i);

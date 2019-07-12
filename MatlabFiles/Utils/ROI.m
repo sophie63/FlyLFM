@@ -25,5 +25,5 @@ for i=1:S(4)
     end
 end
 
-save(strcat(file(1:size(file,2)-4),'ICROI.mat'),'Sm')
+save(strcat(file(1:size(file,2)-4),'TSROI.mat'),'Sm')
 

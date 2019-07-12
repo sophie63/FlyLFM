@@ -1,8 +1,8 @@
 % For Fig. S24
 
-fmask = fileread('/media/test15/ArclightCombo/FlipFlopComponents.txt');
+fmask = fileread('/media/test4/ArclightCombo/FlipFlopComponents.txt');
 Mlist = strsplit(fmask);
-fdata = fileread('/media/test15/ArclightCombo/FlipflopCompnumber.txt');
+fdata = fileread('/media/test4/ArclightCombo/FlipflopCompnumber.txt');
 Dlist = strsplit(fdata);
 
 
@@ -10,7 +10,7 @@ figure
 hold on
 i=0
 for idx=1:length(Mlist)
-
+    figure
     file=Mlist{idx}
     file2=strcat(file(1:size(file,2)-6),'TS.mat');
     load(file2)
@@ -20,7 +20,15 @@ for idx=1:length(Mlist)
     TS(:,2)=TSo(:,ICnum(2))/std(TSo(:,ICnum(2)));
     
     ICmean=(TS(:,1)+TS(:,2))/2;
-    plot(TS(:,1)-ICmean + i*3)
+    for i=1:2
+        plot((1:size(TS,1))/200,TS(:,i)+(i-1)*4)
+  
+        hold on
+    end
+    
+    set(gca,'ytick',[])
+    xlabel('Time (s)')
+    saveas(gcf,strcat('Fig',num2str(idx),'.svg'))
     %hold on
     %plot(TS(:,2)-ICmean+4)
     clear TSo
@@ -28,13 +36,3 @@ for idx=1:length(Mlist)
     i=i+1
 end
 
-load('/media/test15/ControlCombo/100353/Fliflop/100353ss2oncregcdFF20sTSROI.mat')
-TS(:,1)=TS(:,1)/std(TS(:,1));
-TS(:,2)=TS(:,2)/std(TS(:,2));
-ICmean=(TS(:,1)+TS(:,2))/2;
-plot(TS(:,1)-ICmean-6)
-load('/media/test15/ControlCombo/100682series/FlipFlop/100682ss1ondFF20sTSROI.mat')
-TS(:,1)=TS(:,1)/std(TS(:,1));
-TS(:,2)=TS(:,2)/std(TS(:,2));
-ICmean=(TS(:,1)+TS(:,2))/2;
-plot(TS(:,1)-ICmean-9)

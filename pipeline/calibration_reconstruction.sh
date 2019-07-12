@@ -42,7 +42,7 @@ echo $public_dns
 scp -o StrictHostKeyChecking=no -i ~/Downloads/Feb2018.pem $1 "ubuntu@${public_dns}:~/" 
 
 # run command for calibration
-ssh -o StrictHostKeyChecking=no -i ~/Downloads/Feb2018.pem "ubuntu@${public_dns}" "python ~/stanford_lfanalyze_v0.4/lfcalibrate.py ${FILE_NAME} --pixel-size 6.5 --pitch 125 --focal-length 3125 --magnification 40 --na 0.8 --tubelens-focal-length 180.0 --wavelength 510 --medium-index 1.33 --num-slices ${4} --um-per-slice 6.0 --num-threads 15 --supersample 1 -o ${TIF_FILE_NAME}"
+ssh -o StrictHostKeyChecking=no -i ~/Downloads/Feb2018.pem "ubuntu@${public_dns}" "python ~/stanford_lfanalyze_v0.4/lfcalibrate.py ${FILE_NAME} --pixel-size 6.5 --pitch 125 --focal-length 1250 --magnification 20 --na 1.0 --tubelens-focal-length 180.0 --wavelength 510 --medium-index 1.33 --num-slices ${4} --um-per-slice 6.0 --num-threads 12 --supersample 1 -o ${TIF_FILE_NAME}"
 
 # if the calibration was successful
 # edit scp command

@@ -15,11 +15,11 @@ parfor i=1:S1(4)
 R(i,:)=reshape(D(:,:,:,i),[1,S1(1)*S1(2)*S1(3)]);
 S=std(R(i,:));
 R2=R(i,:);
-R2(abs(R2)<(3*S))=0;
+R2(abs(R2)<(2*S))=0;
 D2(:,:,:,i)=reshape(R2,[S1(1),S1(2),S1(3)]);
 end
 out.vol = D2;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'thresh3std.nii'));
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'thresh2std.nii'));
 
 Dcolor=zeros(S1(1),S1(2),S1(3),3);
  C(:,1)=[1,0,0];

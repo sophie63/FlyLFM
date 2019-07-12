@@ -1,5 +1,5 @@
 import numpy as np
-import cv  # OpenCV
+import cv2 as cv # OpenCV
 import math
 
 
@@ -136,7 +136,7 @@ class IsometryWarp(object):
     # further computations beyond this point.
     def warp_image(self, input_image, output_pixels_per_lenslet, direction="R",
                    cropToInside = False,  lenslet_offset = None, output_size = None):
-        im = cv.fromarray(input_image)
+        im = input_image
 
         ul = self.eval_point([0, 0], 'f').flatten()
         ur = self.eval_point([0, im.cols], 'f').flatten()
@@ -548,12 +548,12 @@ class CubicWarp(object):
     # This function expects im to be a numpy float32 array.  Returns 
     def warp_image(self, input_image, output_pixels_per_lenslet, direction="R",
                    cropToInside = False, lenslet_offset = None, output_size = None):
-        im = cv.fromarray(input_image)
+        im = input_image
 
         ul = self.eval_point([0, 0], 'f')
-        ur = self.eval_point([0, im.cols], 'f')
-        ll = self.eval_point([im.rows, 0], 'f')
-        lr = self.eval_point([im.rows, im.cols], 'f')
+        ur = self.eval_point([0, im.shape[1]], 'f')
+        ll = self.eval_point([im.shape[0], 0], 'f')
+        lr = self.eval_point([im.shape[0], im.shape[1]], 'f')
 
         leftbound = np.ceil(max(ul[1], ll[1]))
         rightbound = np.floor(min(ur[1], lr[1]))
@@ -572,7 +572,7 @@ class CubicWarp(object):
             putative_output_size = (nt*output_pixels_per_lenslet, ns*output_pixels_per_lenslet)
         
         # Create the output image
-        output_image = cv.CreateMat(putative_output_size[0], putative_output_size[1], im.type)
+        output_image = np.array((putative_output_size[0], putative_output_size[1]), np.uint16)
 
         # Apply the transform.
         scaled_shift = (0.0, 0.0)
@@ -597,9 +597,9 @@ class CubicWarp(object):
 
         ix_array = (np.ones((putative_output_size[0], putative_output_size[1])).astype('float32') * coeff[0,0] + x * coeff[0,1] + y * coeff[0,2] + x * x * coeff[0,3] + x * y * coeff[0,4] + y * y * coeff[0,5] + x * x * x * coeff[0,6] + x * x * y * coeff[0,7] + x * y * y * coeff[0,8] + y * y * y * coeff[0,9] + scaled_shift[0])
         iy_array = (np.ones((putative_output_size[0], putative_output_size[1])).astype('float32') * coeff[1,0] + x * coeff[1,1] + y * coeff[1,2] + x * x * coeff[1,3] + x * y * coeff[1,4] + y * y * coeff[1,5] + x * x * x * coeff[1,6] + x * x * y * coeff[1,7] + x * y * y * coeff[1,8] + y * y * y * coeff[1,9] + scaled_shift[1])
-        ix = cv.fromarray(ix_array.astype(np.float32))
-        iy = cv.fromarray(iy_array.astype(np.float32))
-        cv.Remap(im, output_image, ix, iy, flags=cv.CV_INTER_LINEAR+cv.CV_WARP_FILL_OUTLIERS+cv.CV_WARP_INVERSE_MAP)
+        ix = ix_array.astype(np.float32)
+        iy = iy_array.astype(np.float32)
+        cv.remap(im, output_image, ix, iy, CV_INTER_LINEAR,CV_WARP_INVERSE_MAP)
 
         result = np.asarray(output_image)
 

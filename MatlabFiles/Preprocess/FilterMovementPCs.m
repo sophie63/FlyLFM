@@ -15,10 +15,11 @@ parfor i=1:S1(4)
 R(i,:)=reshape(D(:,:,:,i),[1,S1(1)*S1(2)*S1(3)]);
 end
 clear D
+R(isnan(R))=0;
 
 %% SVD
 % Use twice the inflexion point 
-Npc=300;
+Npc=200;
 [u,s,v]=nets_svds(R,Npc);
 
 % Save PCA maps
@@ -33,6 +34,7 @@ prompt = 'What are the components that correspond to movement? ';
 Id1 = input(prompt)
 Id2 = input(prompt)
 Id3 = input(prompt)
+%%
 Id4 = input(prompt)
 Id5 = input(prompt)
 Id6 = input(prompt)
@@ -58,7 +60,3 @@ err = MRIwrite(out4,strcat(file(1:size(file,2)-4),'PCAF.nii'));
 % end
 % out4.vol = Dnewtest;
 % err = MRIwrite(out4,strcat(file(1:size(file,2)-4),'PCAFtest.nii'));
-
-
-
-

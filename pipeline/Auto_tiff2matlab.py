@@ -14,7 +14,7 @@ path_list = [sys.argv[1]]
 
 Fr = 100
 Sdff = 1
-z1 = 13
+z1 = 15
 dz = 6 
 
 # Model for fitting onset and offset

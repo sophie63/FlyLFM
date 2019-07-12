@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 import subprocess
 
 
-saving_path = '/media/sophie/New Volume/100156/'
+saving_path = '/media/test6/100036/'
 
-path_list = ['/media/sophie/New Volume/100156ss2']
+path_list = ['/media/test6/100036ss2']
 
-Fr = 800
-Sdff = -1
+Fr = 50
+Sdff = 1
 z1 = 18
 dz = 6 
 
@@ -41,7 +41,7 @@ for path in path_list:
     Dataname=path.split('/')[-1]
 
     # Open one image to get the shape
-    tt = io.imread(path+'/'+Dataname+'-00002.tif') 
+    tt = io.imread(path+'/'+Dataname+'-2.tif') 
     S=tt.shape
 
     print ('Running on '+Dataname)
@@ -107,15 +107,15 @@ for path in path_list:
 
     # Open image times
     print('Opening time file...')
-    for f in os.listdir('/media/sophie/New Volume/Metadata/'):
+    for f in os.listdir('/media/test6/'):
         if Dataname[:6] in f:
             if f.endswith('csv'):
-                TimeFile='/media/sophie/New Volume/Metadata/'+Dataname[:6]+'_.csv'
+                TimeFile='/media/test6/'+Dataname[:6]+'_.csv'
                 Listfile = open(TimeFile, 'r')
                 ListTime = [line.split('\n')[0] for line in Listfile.readlines()]
                 Timespl=[float(ListTime[i].split(',')[2]) for i in range(1,len(ListTime))]
             elif "Original" or "Info" in f:
-                TimeFile='/media/sophie/New Volume/Metadata/'+f
+                TimeFile='/media/test6/'+f
                 with open(TimeFile, 'r') as metafile:
                     lines = metafile.readlines()
                 time_from_start_list = []
@@ -160,8 +160,8 @@ for i,fn in enumerate(data_list):
     os.chdir(saving_path)
     base_name = path_list[0].split('/')[-1][:6]
 
-    bashCommand = '3dvolreg -base '+base_name+'ss1on.nii[0] -prefix '+saving_path+path_list[i].split('/')[-1][:6]+'reg.nii '+fn
-    print bashCommand
+    bashCommand = '3dvolreg -base '+base_name+'ss2on.nii[0] -prefix '+saving_path+path_list[i].split('/')[-1][:6]+'reg.nii '+fn
+    print (bashCommand)
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
@@ -175,7 +175,7 @@ for i,fn in enumerate(data_list):
 # concatenate dkf and save
 dkf_list = []
 for i in range(len(path_list)):
-    fn = saving_path+path_list[i].split('/')[-1][:6]+'ss1ondFF20spsfkf.nii'
+    fn = saving_path+path_list[i].split('/')[-1][:6]+'ss2ondFF20spsfkf.nii'
     dkf = np.array(nib.load(fn).get_data())
     dkf_list.append(dkf)
 

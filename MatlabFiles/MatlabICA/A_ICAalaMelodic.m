@@ -62,7 +62,7 @@ Npc=2*find(DiffFunc>Diffvalue, 1 );
 %% SVD
 [u,s,v]=nets_svds(R,Npc);
 
-% Save PCA maps
+% Save SVD maps
 DE=s*v';
 for i=1:Npc
 Dpca(:,:,:,i)=reshape(DE(i,:),[S1(1),S1(2),S1(3)]);

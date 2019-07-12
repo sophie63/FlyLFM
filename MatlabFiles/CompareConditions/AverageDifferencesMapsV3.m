@@ -4,6 +4,7 @@ clear all
 [FileName,PathName] = uigetfile('*.mat','Select the Xk file','/media/sophie2/');
 file=strcat(PathName,FileName)
 load(file);
+X=Xk;
 Sx=size(X);
 
 % Choose the reconstructed 4D nifti file where all values are positive
