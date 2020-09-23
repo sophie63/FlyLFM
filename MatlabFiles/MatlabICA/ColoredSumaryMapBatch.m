@@ -3,13 +3,17 @@
 clear all
 
 % Open Data
-[FileName,PathName] = uigetfile('*.nii','Select the Nifti file');
-file=strcat(PathName,FileName)
-B=MRIread(file);
-D=double(B.vol);
-clear B
+[FileName,PathName] = uigetfile('*.nii','Select the Nifti file','MultiSelect','on');
+files=strcat(PathName,FileName);
+
+for j=1:size(files,2)
+clear D Data S Data2 out
+B=MRIread(files{j});
+file=files{j};
+D=B.vol;
 S1=size(D);
 
+clear B
 
 parfor i=1:S1(4)
 R(i,:)=reshape(D(:,:,:,i),[1,S1(1)*S1(2)*S1(3)]);
@@ -18,8 +22,8 @@ R2=R(i,:);
 R2(abs(R2)<(2*S))=0;
 D2(:,:,:,i)=reshape(R2,[S1(1),S1(2),S1(3)]);
 end
-out.vol = D2;
-err = MRIwrite(out,strcat(file(1:size(file,2)-4),'thresh2std.nii'));
+%out.vol = D2;
+%err = MRIwrite(out,strcat(file(1:size(file,2)-4),'thresh2std.nii'));
 
 Dcolor=zeros(S1(1),S1(2),S1(3),3);
  C(:,1)=[1,0,0];
@@ -46,7 +50,7 @@ M=prctile(reshape(Dm4norm,Sn(1)*Sn(2)*Sn(3),1),99.9);
 fullFileName = fullfile(strcat(file(1:size(file,2)-4),'coloredSumMap.PNG'));
 imwrite(Dm/M, fullFileName);
 
-
+end
 
 %out.vol = Dcolor;
 %err = MRIwrite(out,strcat(file(1:size(file,2)-4),'color.nii'));

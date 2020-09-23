@@ -27,9 +27,30 @@ Data=D.vol;
 S=size(Data);
 clear D
 %first detrend over 30 sec  
-Unbleached_data = Sdff*dFF(Data,20*Fr);
+
+S=size(Data)
+t=1:S(3);
+
+for (i=1:S(1))
+    i
+           %parfor (j=1:S(2))
+           for (j=1:S(2))
+        D=squeeze(Data(i,j,:));
+        C=smooth(D,20*Fr);
+        Cm=mean(C);
+        Unbleached_data(i,j,:)=(D-C)/max([Cm,1]);
+        end
+
+    end
+
+
 clear Data
 
-out.vol=Unbleached_data(:,:,2:(S(4)-1));
+out.vol=reshape(Unbleached_data(:,:,2:(S(3)-1)),[S(1) S(2) 1 S(3)-2]);
 file2=strcat(file(1:size(file,2)-4),'dFF',num2str(20*Fr),'points.nii');
 err = MRIwrite(out,file2);
+k50=Kalman_Stack_Filter(Unbleached_data(:,:,2:(S(3)-1)));
+out.vol=reshape(k50,[S(1) S(2) 1 S(3)-2]);
+file2=strcat(file(1:size(file,2)-4),'dFF',num2str(20*Fr),'pointsKF.nii');
+err = MRIwrite(out,file2);
+

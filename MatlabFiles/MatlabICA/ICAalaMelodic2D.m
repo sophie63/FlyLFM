@@ -63,7 +63,7 @@ R=R./repmat(stddevs,size(R,1),1);  % Var-norm
 % curve deviates from this (should be higher than the inflexion point)
 %prompt = 'How many components do you want?';
 %Npc = input(prompt)
-Npc=225;
+Npc=50;
 
 %% SVD
 [u,s,v]=nets_svds(R,Npc);
@@ -161,7 +161,9 @@ for i=1:Npc
     plot(TSo(:,i)/sqrt(var(TSo(:,i)))+i*10,'r')
     plot(TSzmapo(:,i)/sqrt(var(TSzmapo(:,i)))+i*10+5,'b')
 end
-
+for i=1:Npc
+TSmean(:,i)=(P/10000)*TSo(:,i)/mean(GMo(:,i)./stddevs');
+end
 
 % Make a summary colored map of the ROIs
 
@@ -185,3 +187,4 @@ fullFileName = strcat(file(1:size(file,2)-4),num2str(Npc),'Smith0_4_',num2str(NP
 imwrite(Dcolor, fullFileName);
 % Next step is opening the maps and time series in an ipython notebook for
 % manual sorting
+
