@@ -1,0 +1,24 @@
+% Downloads neuron images and transforms them to dramatically reduce the size before saving
+%VFB_00014201
+% need also to get 0000, ....
+for 
+for i=0:9999
+     try
+    webread('www.something that could or could not generate an error.com')
+
+    url=strcat('https://v2.virtualflybrain.org/data/VFB/i/0000/',sprintf('%04d',i),'/VFB_00101567/volume.nrrd')
+    outfilename = websave('volume.nrrd',url)
+    [X, meta] = nrrdread(outfilename);
+    Ds=BoxavFunction3D(X);
+    S=size(Ds);
+    file2=strcat("Z:\GrunwaldKadow_group\Sophie\WalkProject\VFBData\VFB_0000",sprintf('%04d',i),".tif");  
+    imwrite(Ds(:,:,1),file2)
+    for j=2:S(3)
+    imwrite(Ds(:,:,j),file2,'WriteMode','append')
+    end
+    delete(outfilename)
+      catch 
+    % Nothing to do
+  end
+end
+
