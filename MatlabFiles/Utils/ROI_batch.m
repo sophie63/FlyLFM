@@ -17,19 +17,19 @@ for idx=1:length(Mlist)
     M2=Mask./(max(max(max(max(Mask)))));
     SM2=size(M2);
 
-    for i=1:S(4)
-        for j=1:SM2(4)
-            TS(i,j)=sum(sum(sum(M2(:,:,:,j).*squeeze(Data(:,:,:,i)))));
-        end
-    end
 
+    M2r=reshape(M2,SM2(1)*SM2(2)*SM2(3),SM2(4));
+    Datar=reshape(Data,SM2(1)*SM2(2)*SM2(3),S(4));
+    M2rnorm=normc(M2r);
+
+    TS=M2rnorm'*Datar;
     plotTS
     saveas(f, strcat(Nlist{idx},'RegionTS_LR.png'));
     savefig(strcat(Nlist{idx},'RegionTS_LR.fig'));
     save(strcat(Nlist{idx},'TS_LR.mat'),'TS');
     clear TS
-    clear Mask
-    clear Data
+    clear Mask M2r M2rnorm
+    clear Data Datar
     clear M2
     close all
 end

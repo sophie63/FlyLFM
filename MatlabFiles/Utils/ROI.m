@@ -19,11 +19,17 @@ M2=Mask./max((max(max(max(Mask)))));
 SM2=size(M2);
 Data(isnan(Data))=0;
 
-for i=1:S(4)
-    for j=1:SM2(4)
-        Sm(i,j)=sum(sum(sum(M2(:,:,:,j).*squeeze(Data(:,:,:,i)))))/sum(sum(sum(M2(:,:,:,j))));
-    end
-end
+M2r=reshape(M2,SM2(1)*SM2(2)*SM2(3),SM2(4));
+Datar=reshape(Data,SM2(1)*SM2(2)*SM2(3),S(4));
+M2rnorm=normc(M2r);
 
-save(strcat(file(1:size(file,2)-4),'TSROI.mat'),'Sm')
+TS=M2rnorm'*Datar;
+
+%for i=1:S(4)
+    %parfor j=1:SM2(4)
+        %Sm(i,j)=sum(sum(sum(M2(:,:,:,j).*squeeze(Data(:,:,:,i)))))/sum(sum(sum(M2(:,:,:,j))));
+    %end
+%end
+
+save(strcat(file(1:size(file,2)-4),'TSROI.mat'),'TS')
 
