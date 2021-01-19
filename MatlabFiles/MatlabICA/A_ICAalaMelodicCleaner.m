@@ -97,7 +97,11 @@ GMzn(GMzn>0)=0;
 GMznm=mean(GMzn);
 GMs=GM.*repmat(sign(GMzpm+GMznm),size(GM,1),1); 
 
+<<<<<<< Updated upstream
 TS=u*s*A;
+=======
+TS=u*s*A*stdev;
+>>>>>>> Stashed changes
 TSs=TS.*repmat(sign(GMzpm+GMznm),size(TS,1),1);
 
 %reorder maps by variance 
@@ -110,6 +114,7 @@ GMo=GMs(:,Order(Npc:-1:1));
 % Save ICA maps and time series
 Dica=reshape(GMo,[S1(1),S1(2),S1(3),Npc]);
 out.vol = Dica;
+<<<<<<< Updated upstream
 err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),'IC.nii'));
 
 save(strcat(file(1:size(file,2)-4),num2str(Npc),'TS'),'TSo')
@@ -130,6 +135,11 @@ for i=1:Npc
     plot(TSo(:,i)/sqrt(var(TSo(:,i)))+i*10,'r')
     plot(TSzmapo(:,i)/sqrt(var(TSzmapo(:,i)))+i*10+5,'b')
 end
+=======
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),num2str(Npc),num2str(NPCfilt),'IC.nii'));
+
+save(strcat(file(1:size(file,2)-4),num2str(Npc),num2str(NPCfilt),'TS'),'TSo')
+>>>>>>> Stashed changes
 
 savefig(strcat(file(1:size(file,2)-4),'TimeSeries'))
 
