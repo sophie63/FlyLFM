@@ -1,0 +1,103 @@
+%open all anatomical datasets and .points
+DClones=MRIread("/media/NAS/Sophie/WalkProject/VFBClones.nii");
+DataClones=double(DClones.vol);
+Sc=size(DataClones);
+DataClonesr=reshape(DataClones,Sc(1)*Sc(2)*Sc(3),Sc(4));
+
+DClusters=MRIread("/media/NAS/Sophie/WalkProject/VFBClusters.nii");
+DataClusters=double(DClusters.vol);
+Scl=size(DataCusters);
+DataClustersr=reshape(DataClusters,Scl(1)*Scl(2)*Scl(3),Scl(4));
+
+
+DFC=MRIread("/media/NAS/Sophie/WalkProject/VFB2Flycircuit.nii");
+DataFC=double(DFC.vol)
+Sfc=size(DataFC);
+DataFCr=reshape(DataFC,Sfc(1)*Sfc(2)*Sfc(3),Sfc(4));
+
+DEM=MRIread("/media/NAS/Sophie/WalkProject/VFB2.nii");
+DataEM=double(DEM.vol);
+Sem=size(DataEM);
+DataEMr=reshape(DataEM,Sem(1)*Sem(2)*Sem(3),Sem(4));
+
+
+St=[242 113 34];
+PointsTemplate=readtable('/media/NAS/Sophie/WalkProject/SmallJRC2018Template.points','FileType','text','ReadVariableNames',false);
+
+
+%% Open: GoodIC file, IC.nii, ICTS.mat, .points
+
+% File list 
+fname = fileread('/media/NAS/Sophie/WalkProject/AnalysisList');
+Nlist = strsplit(fname);
+
+for j=1:ceil(size(Nlist,1)/4)
+    load(Nlist{1+(j-1)*4});
+    load(Nlist{2+(j-1)*4});
+    D=MRIread(Nlist{4+(j-1)*4});
+    Data=double(D.vol);
+    Datab = permute(Data,[2 1 3 4]);
+    S=size(Datab);
+    Points=readtable(Nlist{3+(j-1)*4},'FileType','text','ReadVariableNames',false);
+
+% Save good IC nii and TS   
+    out.vol=Stack;
+    err = MRIwrite(out,strcat('/media/NAS/Sophie/RawData/toPreprocess/',Folders(l).name,'.nii'));
+    save(TS(:,GoodIC),'TS')
+clear TS
+    
+%% Zip points 
+    k=1;
+    for i=1:size(Points,1)
+        for t=1:size(PointsTemplate,1)
+            if Points.Var3(i) == PointsTemplate.Var3(t)
+                Xstr=split(Points.Var4(i),'"'); Ystr=split(Points.Var5(i),'"');Zstr=split(Points.Var6(i),'"');
+                Xstrt=split(PointsTemplate.Var4(i),'"'); Ystrt=split(PointsTemplate.Var5(i),'"');Zstrt=split(PointsTemplate.Var6(i),'"');
+                TempPoints(:,:,:,k)=(str2num(cell2mat(Xstrt(2))), str2num(cell2mat(Ystrt(2))), str2num(cell2mat(Zstrt(2))));           
+                DataPoints(:,:,:,k)=(str2num(cell2mat(Xstr(2))), str2num(cell2mat(Ystr(2))), str2num(cell2mat(Zstr(2))));
+                k=k+1;
+                clear Xstr Xstrt Ystr Ystrt Zstr Zstrt
+            end
+        end
+    end
+    
+clear Points PointsTemplate
+
+%% Thin plate
+for x=1:St(1)
+for y=1:St(2)
+for z=1:St(3)
+[wobject] = TPS3D(TempPoints,DataPoints,[x y z]);
+zobject(:,z)=wobject;
+end
+for n=1:size(GoodIC,2)
+NewVals(x,y,:,n)=interp3(Data(:,:,:,GoodIC(n)),zobject(1,:),zobject(2,:),zobject(3,:));
+end
+
+end
+x
+end
+
+%% Downsize and save
+for n=1:size(GoodIC,2)
+NewValsc(:,:,:,n)=BoxavFunction3Dby2(NewVals(:,:,:,n));
+end
+
+%out.vol=IregMC2;
+NewValsb=permute(NewValsc,[2 1 3 4]);
+out.vol=NewValsb;
+err = MRIwrite(out,strcat(file(1:size(file,2)-4),'JRC2018reg.nii'));
+
+%% Get Scores
+Snv=size(NewValsc);
+Datar=reshape(NewValsc,Snv(1)*Snv(2)*Snv(3),Snv(4));
+Scoresc=DataClonesr*Datar;
+ScoresCl=DataClustersr*Datar;
+ScoresEM=DataEMr*Datar;
+ScoresFC=DataFCr*Datar;
+
+save
+
+clear NewValsc NewValsb NewVals Datar
+
+end
