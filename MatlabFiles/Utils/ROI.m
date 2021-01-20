@@ -1,4 +1,4 @@
-%clear all
+clear all
 %open mask
 [FileName,PathName] = uigetfile('*.nii','Select the Nifti file','/media');
 file=strcat(PathName,FileName)
